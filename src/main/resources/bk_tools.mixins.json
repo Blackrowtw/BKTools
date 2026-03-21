@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.blackrowtw.bk_tools.mixins",
+  "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+  "mixins": ["MinecraftServerMixin"],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
