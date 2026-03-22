@@ -15,7 +15,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": ["me.blackrowtw.bk_tools.BKTools"]
+    "main": ["me.blackrowtw.bk_tools.BKTools"],
+    "client": ["me.blackrowtw.bk_tools.BKToolsClient"]
   },
   "mixins": ["bk_tools.mixins.json"],
 
