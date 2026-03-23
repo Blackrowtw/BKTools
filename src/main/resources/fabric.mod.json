@@ -13,10 +13,11 @@
 
   "icon": "assets/bk_tools/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": ["me.blackrowtw.bk_tools.BKTools"],
-    "client": ["me.blackrowtw.bk_tools.BKToolsClient"]
+    "client": ["me.blackrowtw.bk_tools.BKToolsClient"],
+    "modmenu": ["me.blackrowtw.bk_tools.modCompat.ModMenu"]
   },
   "mixins": [
     {

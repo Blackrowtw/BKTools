@@ -1,5 +1,5 @@
 {
   "bk_tools.gui.title": "BKTools 設定",
-  "bk_tools.hotkeys": "快捷鍵",
-  "bk_tools.hotkey.open_gui": "開啟設定介面"
+  "bk_tools.config.name.openGuiConfigs": "開啟設定介面",
+  "bk_tools.config.comment.openGuiConfigs": "開啟 BKTools 設定頁面的快捷鍵"
 }

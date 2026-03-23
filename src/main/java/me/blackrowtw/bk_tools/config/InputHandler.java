@@ -19,11 +19,13 @@
  */
 
 // 提供快捷鍵觸發事件的處理
-package me.blackrowtw.bk_tools;
+package me.blackrowtw.bk_tools.config;
 
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
+
+import me.blackrowtw.bk_tools.Reference;
 
 public class InputHandler implements IKeybindProvider {
 
@@ -39,18 +41,30 @@ public class InputHandler implements IKeybindProvider {
     // 告訴 malilib 這個模組有哪些快捷鍵（用於衝突偵測）
     @Override
     public void addKeysToMap(IKeybindManager manager) {
-        for (IHotkey hotkey : Configs.HOTKEYS) {
-            manager.addKeybindToMap(hotkey.getKeybind());
+        // 主設定快捷鍵
+        for (IHotkey hk : Configs.HOTKEYS) {
+            manager.addKeybindToMap(hk.getKeybind());
+        }
+        // CMB 快捷鍵（數量動態）
+        for (IHotkey hk : Configs.HOTKEYS) {
+            manager.addKeybindToMap(hk.getKeybind());
         }
     }
 
     // 告訴 malilib 快捷鍵屬於哪個分類（在設定 GUI 裡顯示）
     @Override
     public void addHotkeys(IKeybindManager manager) {
+        // 主設定快捷鍵顯示在「BKTools」分類下
         manager.addHotkeysForCategory(
                 Reference.MOD_NAME, // 分類標題
-                "bk_tools.hotkeys", // translation key 前綴
+                Reference.MOD_ID + ".config", // 翻譯文件 鍵值
                 Configs.HOTKEYS // 快捷鍵清單
         );
+
+        // CMB 快捷鍵顯示在獨立分類
+        manager.addHotkeysForCategory(
+                Reference.MOD_NAME + " - CMB",
+                Reference.MOD_ID + ".cmb",
+                Configs.HOTKEYS);
     }
 }

@@ -1,5 +1,9 @@
 {
   "bk_tools.gui.title": "BKTools Settings",
-  "bk_tools.hotkeys": "Hotkeys",
-  "bk_tools.hotkey.open_gui": "Open Config GUI"
+  "bk_tools.config.name.openGuiConfigs": "Open Config GUI",
+  "bk_tools.config.comment.openGuiConfigs": "Hotkey to open the BKTools config screen",
+  "bk_tools.cmb.name.cmb_hotkey_0": "Hotkey",
+  "bk_tools.cmb.comment.cmb_hotkey_0": "Hotkey to execute this command",
+  "bk_tools.cmb.name.cmb_command_0": "Command",
+  "bk_tools.cmb.comment.cmb_command_0": "Command to send (with or without /)"
 }

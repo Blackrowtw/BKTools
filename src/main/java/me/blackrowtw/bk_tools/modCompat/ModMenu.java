@@ -2,7 +2,7 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  BlacKrowtw and contributors
+ * Copyright (C) 2026  Fallen_Breath and contributors
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,20 +18,16 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.blackrowtw.bk_tools;
+package me.blackrowtw.bk_tools.modCompat;
 
-import fi.dy.masa.malilib.event.InitializationHandler;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import me.blackrowtw.bk_tools.config.GuiConfigs;
 
-import me.blackrowtw.bk_tools.init.InitHandler;
-
-@Environment(EnvType.CLIENT)
-public class BKToolsClient implements ClientModInitializer {
+public class ModMenu implements ModMenuApi {
 
     @Override
-    public void onInitializeClient() {
-        InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return screen -> new GuiConfigs();
     }
 }
