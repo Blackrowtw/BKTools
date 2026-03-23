@@ -2,7 +2,7 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  BlacKrowtw and contributors
+ * Copyright (C) 2026  Fallen_Breath and contributors
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,18 +18,13 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// 模組的身份識別中心，用於取得 MOD_ID
 package me.blackrowtw.bk_tools;
 
-import fi.dy.masa.malilib.event.InitializationHandler;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import fi.dy.masa.malilib.util.StringUtils;
 
-@Environment(EnvType.CLIENT)
-public class BKToolsClient implements ClientModInitializer {
-
-    @Override
-    public void onInitializeClient() {
-        InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
-    }
+public class Reference {
+    public static final String MOD_ID = "bk_tools";
+    public static final String MOD_NAME = "BKTools";
+    public static final String MOD_VERSION = StringUtils.getModVersionString(MOD_ID);
 }
