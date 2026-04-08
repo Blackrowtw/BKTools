@@ -26,12 +26,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import me.blackrowtw.bk_tools.init.InitHandler;
+import me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwReloadListener;
 
 @Environment(EnvType.CLIENT)
 public class BKToolsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        // 註冊 Cn2TwReloadListener 以確保在資源重新載入時能夠正確更新 fallback 資料
+        Cn2TwReloadListener.register();
+        // malilib 的註冊與初始化 InitHandler 以進行後續的模組初始化工作
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
     }
 }

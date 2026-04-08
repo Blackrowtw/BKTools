@@ -23,46 +23,30 @@ package me.blackrowtw.bk_tools.init;
 
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InputEventHandler;
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
 import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.data.ModInfo;
 
+import me.blackrowtw.bk_tools.Reference;
 import me.blackrowtw.bk_tools.config.Configs;
 import me.blackrowtw.bk_tools.config.GuiConfigs;
 import me.blackrowtw.bk_tools.config.InputHandler;
-import me.blackrowtw.bk_tools.Reference;
+import me.blackrowtw.bk_tools.config.KeyCallbackRegistry;
 
 public class InitHandler implements IInitializationHandler {
 
-    @Override
-    public void registerModHandlers() {
-        // 1. 登錄設定處理器
-        ConfigManager.getInstance().registerConfigHandler(
-                Reference.MOD_ID, new Configs());
-        // 2. 登錄設定介面工廠
-        Registry.CONFIG_SCREEN.registerConfigScreenFactory(
-                new ModInfo(Reference.MOD_ID, Reference.MOD_NAME, GuiConfigs::new));
-        // 3. 登錄快捷鍵提供者（這行之前被註解掉了，是快捷鍵無效的原因）
-        InputEventHandler.getKeybindManager()
-                .registerKeybindProvider(InputHandler.getInstance());
-
-        // 4. 設定快捷鍵 callback
-        Configs.OPEN_GUI_CONFIGS.getKeybind().setCallback(new OpenGuiCallback());
-    }
-
-    // ── 開啟設定介面的快捷鍵 callback ──────────────────────
-    private static class OpenGuiCallback implements IHotkeyCallback {
         @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key) {
-            if (action == KeyAction.PRESS) {
-                // GuiBase 是 malilib 自己的工具，不需要 import MinecraftClient
-                GuiBase.openGui(new GuiConfigs());
-            }
-            return true;
+        public void registerModHandlers() {
+                // 1. 登錄設定處理器
+                ConfigManager.getInstance().registerConfigHandler(
+                                Reference.MOD_ID, new Configs());
+                // 2. 登錄設定介面工廠
+                Registry.CONFIG_SCREEN.registerConfigScreenFactory(
+                                new ModInfo(Reference.MOD_ID, Reference.MOD_NAME, GuiConfigs::new));
+                // 3. 登錄快捷鍵提供者
+                InputEventHandler.getKeybindManager()
+                                .registerKeybindProvider(InputHandler.getInstance());
+                // 4. 登錄所有快捷鍵 callback
+                KeyCallbackRegistry.register();
         }
-    }
 }

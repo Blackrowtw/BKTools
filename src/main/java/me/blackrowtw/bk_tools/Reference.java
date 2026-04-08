@@ -18,13 +18,39 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// 模組的身份識別中心，用於取得 MOD_ID
+// 模組的身份識別中心
 package me.blackrowtw.bk_tools;
 
 import fi.dy.masa.malilib.util.StringUtils;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
+
+import java.nio.file.Path;
+
+import me.blackrowtw.bk_tools.config.Configs;
 
 public class Reference {
+
+    // ── 模組身份 ──────────────────────────────────────────
     public static final String MOD_ID = "bk_tools";
     public static final String MOD_NAME = "BKTools";
     public static final String MOD_VERSION = StringUtils.getModVersionString(MOD_ID);
+    public static final String MALILIB_VERSION = StringUtils.getModVersionString("malilib");
+    public static final String MODMENU_VERSION = StringUtils.getModVersionString("modmenu");
+
+    // ── 路徑 ──────────────────────────────────────────────
+    public static final Path GAME_DIR = FabricLoader.getInstance().getGameDir();
+    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir();
+
+    // ── Minecraft 版本資訊 ────────────────────────────────
+    public static final String MC_VERSION = SharedConstants.getCurrentVersion().id();
+    public static final int MC_DATA_VERSION = SharedConstants.getCurrentVersion().dataVersion().version();
+
+    // ── 開發模式 ──────────────────────────────────────────
+    public static final boolean RUNNING_IN_IDE = FabricLoader.getInstance().isDevelopmentEnvironment();
+
+    // 改為 method，每次呼叫時動態判斷（包含手動開關）
+    public static boolean isDebugMode() {
+        return RUNNING_IN_IDE || Configs.Generic.FORCE_DEBUG_MODE.getBooleanValue();
+    }
 }
