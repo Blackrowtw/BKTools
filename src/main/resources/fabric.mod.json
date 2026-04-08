@@ -4,11 +4,11 @@
   "version": "${version}",
 
   "name": "${name}",
-  "description": "My fabric mods to learn Java. Built with Fallen_Breath's fabric mod template.",
+  "description": "A Minecraft Fabric mod built on Fallen_Breath's fabric-mod-template. Uses the malilib library by masa and sakura-ryoko.",
   "authors": ["BlacKrowtw"],
   "contact": {
-    "homepage": "https://modrinth.com",
-    "sources": "https://github.com/Fallen-Breath/fabric-mod-template"
+    "homepage": "https://github.com/Blackrowtw",
+    "sources": "https://github.com/Blackrowtw/BKTools"
   },
 
   "icon": "assets/bk_tools/icon.png",
@@ -27,6 +27,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.11.4",
+    "fabric-api-base": "*",
+    "fabric-resource-loader-v1": "*",
     "minecraft": "${minecraft_dependency}",
     "malilib": "${malilib_dependency}"
   }

@@ -24,7 +24,7 @@ repositories {
 	maven {
     url = 'https://maven.terraformersmc.com/releases'
     content { includeGroup('com.terraformersmc') }
-} // 這個是 ModMenu 的 maven repository，裡面有 ModMenu 和它的依賴（如 libgui）。
+	} // 這個是 ModMenu 的 maven repository，裡面有 ModMenu 和它的依賴（如 libgui）。
 	maven {
 		url = 'https://masa.dy.fi/maven'
 		content { includeGroupAndSubgroups('fi.dy.masa') }
@@ -70,10 +70,27 @@ dependencies {
 			? "com.github.sakura-ryoko:malilib:${project.malilib_version}"
 			: "fi.dy.masa.malilib:${project.malilib_version}")
 	autoCompileOnly(malilibNotation)
+	modLocalRuntime(malilibNotation) // 只在 runClient 時自動載入
 
 	// ModMenu
 	autoCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
+	modLocalRuntime "com.terraformersmc:modmenu:${project.mod_menu_version}" // 只在 runClient 時自動載入
 
+	// modmenu 的依賴
+	modLocalRuntime(fabricApi.module("fabric-screen-api-v1", project.fabric_api_version))
+	modLocalRuntime(fabricApi.module("fabric-key-binding-api-v1", project.fabric_api_version))
+	modLocalRuntime(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_api_version))
+
+	// FabricApi
+	def fabricApiModules = []
+	if (mcVersion >= 12109) {
+		fabricApiModules.add("fabric-api-base")
+		fabricApiModules.add("fabric-resource-loader-v1")
+	}
+	fabricApiModules.forEach {
+		include(autoImplementation(fabricApi.module(it, project.fabric_api_version)))
+	}
+	
 	// runtime mods
 	//	if (mcVersion < 11904) {
 	//		autoRuntimeOnly(mcVersion < 11900 ? "com.github.astei:lazydfu:0.1.2" : "com.github.Fallen-Breath:lazydfu:a7cfc44c0c")
@@ -259,7 +276,7 @@ license {
 	}
 	ext {
 		name = project.mod_name
-		author = 'Fallen_Breath'
+		author = 'BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)'
 		year = Calendar.getInstance().get(Calendar.YEAR).toString()
 	}
 }
