@@ -1,7 +1,13 @@
 This file is part of the ${name} project, licensed under the
 GNU Lesser General Public License v3.0
 
-Copyright (C) ${year}  ${author} and contributors
+Copyright (C) ${year} ${author}
+
+Based on fabric-mod-template by Fallen_Breath
+See: https://github.com/Fallen-Breath/fabric-mod-template
+
+This project uses the malilib library by masa and sakura-ryoko
+See: https://github.com/sakura-ryoko/malilib
 
 ${name} is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
