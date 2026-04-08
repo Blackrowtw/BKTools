@@ -4,7 +4,7 @@
   "package": "me.blackrowtw.bk_tools.mixins",
   "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
   "mixins": ["MinecraftServerMixin"],
-  "client": [],
+  "client": ["ClientLanguageMixin"],
   "injectors": {
     "defaultRequire": 1
   }
