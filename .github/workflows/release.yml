@@ -23,6 +23,9 @@ on:
         description: The tag of the release you want to append the artifact to
         type: string
         required: true
+  repository_dispatch:
+    types:
+      - tag-released
 
 
 jobs:
@@ -31,10 +34,16 @@ jobs:
     steps:
       - name: Show action parameters
         run: |
+          if [ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]; then
+            TAG="${{ github.event.client_payload.tag }}"
+          else
+            TAG="${{ github.event.inputs.target_release_tag }}"
+          fi
           cat <<EOF > $GITHUB_STEP_SUMMARY
           ## Action Parameters
           - target_subproject: \`${{ github.event.inputs.target_subproject }}\`
-          - target_release_tag: \`${{ github.event.inputs.target_release_tag }}\`
+          - target_release_tag: \`$TAG\`
+          - event: \`$GITHUB_EVENT_NAME\`
           EOF
 
   matrix_prep:
@@ -46,12 +55,21 @@ jobs:
   validate_release:
     runs-on: ubuntu-latest
     steps:
+      - name: Get tag name
+        id: get_tag
+        run: |
+          if [ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]; then
+            echo "tag=${{ github.event.client_payload.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.event.inputs.target_release_tag }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Get github release information
         uses: cardinalby/git-get-release-action@1.2.5
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag: ${{ github.event.inputs.target_release_tag }}
+          tag: ${{ steps.get_tag.outputs.tag }}
 
   build:
     uses: ./.github/workflows/build.yml
@@ -111,6 +129,9 @@ jobs:
           elif [ $GITHUB_EVENT_NAME == 'workflow_dispatch' ]
           then
               echo "tag_name=${{ github.event.inputs.target_release_tag }}" >> $GITHUB_OUTPUT
+          elif [ $GITHUB_EVENT_NAME == 'repository_dispatch' ]
+          then
+              echo "tag_name=${{ github.event.client_payload.tag }}" >> $GITHUB_OUTPUT
           else
               echo Unknown github event name $GITHUB_EVENT_NAME
               exit 1

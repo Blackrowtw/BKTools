@@ -1,0 +1,67 @@
+name: Git Tag Dev
+
+on:
+  push:
+    tags:
+      - "dev-v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/dev' }}
+
+      - name: Make Gradlew Executable
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          BUILD_ID: ${{ github.run_number }}
+          BUILD_RELEASE: true
+
+      - name: Cleanup Unwanted Jars
+        run: |
+          rm -f versions/*/build/libs/*-sources.jar
+          rm -f versions/*/build/libs/*-dev.jar
+          rm -f versions/*/build/libs/*-shadow.jar
+
+      - name: Collect mod jars
+        id: files
+        run: |
+          shopt -s extglob
+          mkdir mod-jars
+          for jar in versions/*/build/libs/!(*-@(dev|sources|shadow)).jar; do
+              cp -p "$jar" mod-jars/
+          done
+          ls -l mod-jars
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mod-jars/*.jar
+          name: "Dev: ${{ github.ref_name }}"
+          body: |
+            ## 📝 Commit 紀錄
+          generate_release_notes: true
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

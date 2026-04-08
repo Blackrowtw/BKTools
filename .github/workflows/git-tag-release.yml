@@ -1,0 +1,130 @@
+name: Git Tag Release
+
+on:
+  push:
+    tags:
+      - "release-v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/dev' }}
+
+      - name: Make Gradlew Executable
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          BUILD_ID: ${{ github.run_number }}
+          BUILD_RELEASE: true
+
+      - name: Cleanup Unwanted Jars
+        run: |
+          rm -f versions/*/build/libs/*-sources.jar
+          rm -f versions/*/build/libs/*-dev.jar
+          rm -f versions/*/build/libs/*-shadow.jar
+
+      - name: Extract Changelog for this version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#release-v}"
+          echo "版本號: $VERSION"
+
+          NOTES=$(python3 - <<EOF
+          import re, sys
+
+          version = "$VERSION"
+          try:
+              with open("CHANGELOG.md", "r", encoding="utf-8") as f:
+                  content = f.read()
+          except FileNotFoundError:
+              sys.exit(0)
+
+          pattern = rf"(?m)^## \[{re.escape(version)}\].*?\n(.*?)(?=^## |\Z)"
+          match = re.search(pattern, content, re.DOTALL)
+
+          if match:
+              print(match.group(1).strip())
+          EOF
+          )
+
+          if [ -n "$NOTES" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            {
+              echo "notes<<EOF_NOTES"
+              echo "$NOTES"
+              echo "EOF_NOTES"
+            } >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "notes=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Collect mod jars
+        id: files
+        run: |
+          shopt -s extglob
+          mkdir mod-jars
+          for jar in versions/*/build/libs/!(*-@(dev|sources|shadow)).jar; do
+              cp -p "$jar" mod-jars/
+          done
+          ls -l mod-jars
+
+      - name: Create Release (with CHANGELOG)
+        if: steps.changelog.outputs.found == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mod-jars/*.jar
+          name: "版本發布：${{ github.ref_name }}"
+          body: |
+            ## 📋 本版本更新內容
+
+            ${{ steps.changelog.outputs.notes }}
+
+            ---
+
+            ## 📝 Commit 紀錄
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (auto-generated notes)
+        if: steps.changelog.outputs.found == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mod-jars/*.jar
+          name: "版本發布：${{ github.ref_name }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Release workflow
+        run: |
+          gh api repos/${{ github.repository }}/dispatches \
+            --field event_type='tag-released' \
+            --field client_payload[tag]='${{ github.ref_name }}'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
