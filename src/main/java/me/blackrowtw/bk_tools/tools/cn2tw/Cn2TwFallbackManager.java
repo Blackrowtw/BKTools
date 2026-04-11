@@ -33,11 +33,13 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import me.blackrowtw.bk_tools.Reference;
+import me.blackrowtw.bk_tools.config.Configs;
 import me.blackrowtw.bk_tools.util.DebugLogger;
 import me.blackrowtw.bk_tools.util.SendChatMessage;
 
@@ -57,10 +59,10 @@ public class Cn2TwFallbackManager {
     private Cn2TwFallbackManager() {
     }
 
-    // ── fallback 結果存放處 ────────────────────────────────
+    // ── fallback 結果存放處 (執行緒安全) ─────────────────────
     // key = translation key（例如 "some_mod.item.foo"）
     // value = zh_cn 原文（未來接繁簡轉換器後替換）
-    private final Map<String, String> fallbackMap = new HashMap<>();
+    private final ConcurrentHashMap<String, String> fallbackMap = new ConcurrentHashMap<>();
 
     // ── 公開查詢（給 Mixin 呼叫）─────────────────────────
     public boolean contains(String key) {
@@ -96,7 +98,11 @@ public class Cn2TwFallbackManager {
     public void apply(Map<String, String> preparedData) {
         fallbackMap.clear();
 
-        DebugLogger.always("Cn2TwFallback", "功能已關閉，跳過套用");
+        boolean enabled = Configs.Cn2Tw.CN2TW_ENABLE_FALLBACK.getBooleanValue();
+        if (!enabled) {
+            DebugLogger.always("Cn2TwFallback", "功能已關閉，跳過套用");
+            return;
+        }
 
         fallbackMap.putAll(preparedData);
 
@@ -107,8 +113,41 @@ public class Cn2TwFallbackManager {
         }
     }
 
-    // ── dumpToFile（供快捷鍵 callback 呼叫）──────────────
-    public void dumpToFile() {
+    // ── 檢查功能是否啟用 ─────────────────────────────────────
+    public boolean isEnabled() {
+        return Configs.Cn2Tw.CN2TW_ENABLE_FALLBACK.getBooleanValue();
+    }
+
+    // ── dumpLangFile（供 GUI 按鈕呼叫）──────────────────────
+    public void dumpLangFile() {
+        var minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (minecraft == null || minecraft.getResourceManager() == null) {
+            DebugLogger.alwaysWarn("Cn2TwFallback", "無法取得 ResourceManager");
+            return;
+        }
+
+        // 先刷新資源
+        refreshSync(minecraft.getResourceManager());
+
+        // 根據刷新結果輸出提示
+        boolean enabled = isEnabled();
+        int count = fallbackMap.size();
+
+        if (enabled && count > 0) {
+            SendChatMessage.of(String.format("[BKTools] 語言資源已刷新，補充了 %d 條翻譯", count))
+                    .color(ChatFormatting.GREEN)
+                    .send();
+        } else if (enabled) {
+            SendChatMessage.of("[BKTools] 語言資源已刷新，但無需要補充的翻譯")
+                    .color(ChatFormatting.YELLOW)
+                    .send();
+        } else {
+            SendChatMessage.of("[BKTools] CN2TW 功能已關閉，資源未刷新")
+                    .color(ChatFormatting.RED)
+                    .send();
+        }
+
+        // 輸出 JSON 文件
         try {
             Files.createDirectories(OUTPUT_DIR);
 
@@ -150,11 +189,8 @@ public class Cn2TwFallbackManager {
                         .toJson(root, writer);
             }
 
-            DebugLogger.always("Cn2TwFallback", "language map 已輸出到: %s",
-                    OUTPUT_FILE.toAbsolutePath());
-
             // 輸出到聊天欄，帶可點擊的資料夾連結
-            SendChatMessage.of("[Cn2TwFallback] 開啟遊戲時取得的 language map 已輸出到：")
+            SendChatMessage.of("[BKTools] 調試文件已輸出到：")
                     .withFolderLink(OUTPUT_DIR, OUTPUT_FILE.getFileName().toString())
                     .color(ChatFormatting.GRAY)
                     .send();
@@ -162,6 +198,12 @@ public class Cn2TwFallbackManager {
         } catch (Exception e) {
             DebugLogger.alwaysWarn("Cn2TwFallback", "輸出 language map 失敗: %s", e.getMessage());
         }
+    }
+
+    // ── 同步刷新（供 dumpToFile 內部呼叫）────────────────
+    private void refreshSync(ResourceManager resourceManager) {
+        Map<String, String> prepared = prepare(resourceManager);
+        apply(prepared);
     }
 
     // ── loadLanguageFile（讀取指定語言的所有翻譯）─────────

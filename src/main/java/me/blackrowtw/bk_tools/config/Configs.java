@@ -131,22 +131,22 @@ public class Configs implements IConfigHandler {
                                 .apply(KEY_CN2TW);
 
                 /**
-                 * 觸發式按鈕：輸出 fallback map 到 debug 檔案
-                 * 不需要綁定快捷鍵，直接在 GUI 中點擊
-                 * 60 ticks（3 秒）冷卻，避免頻繁寫入
+                 * 觸發式按鈕：輸出 language map 到 JSON 檔案
+                 * 點擊時先刷新資源，再輸出 JSON 檔案
+                 * 60 ticks（3 秒）冷卻
                  */
-                public static final ConfigBtnTrigger CN2TW_DUMP_DEBUG = new ConfigBtnTrigger(
-                                "cn2tw_dump_debug",
-                                "Write the current fallback map to config/bktools_debug/",
+                public static final ConfigBtnTrigger CN2TW_DUMP_LANG_FILE = new ConfigBtnTrigger(
+                                "cn2tw_dump_lang_file",
+                                "Write the current language map to config/bktools_debug/",
                                 () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
-                                                .dumpToFile(),
-                                "bk_tools.config.btnTrigger.cn2tw_dump_debug",
+                                                .dumpLangFile(),
+                                "bk_tools.config.btnTrigger.cn2tw_dump_lang_file",
                                 60).apply(KEY_CN2TW);
 
                 // OPTIONS 供 GuiConfigs 顯示用（包含所有型別）
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
                                 CN2TW_ENABLE_FALLBACK,
-                                CN2TW_DUMP_DEBUG);
+                                CN2TW_DUMP_LANG_FILE);
 
         }
 

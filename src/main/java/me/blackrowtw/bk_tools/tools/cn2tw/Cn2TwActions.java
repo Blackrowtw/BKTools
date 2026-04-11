@@ -31,7 +31,7 @@ public class Cn2TwActions {
             @Override
             public boolean onKeyAction(KeyAction action, IKeybind key) {
                 if (action == KeyAction.PRESS) {
-                    Cn2TwFallbackManager.getInstance().dumpToFile();
+                    Cn2TwFallbackManager.getInstance().dumpLangFile();
 
                 }
                 return true;

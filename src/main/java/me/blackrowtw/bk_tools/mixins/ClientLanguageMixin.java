@@ -39,6 +39,11 @@ public class ClientLanguageMixin {
             return;
 
         Cn2TwFallbackManager manager = Cn2TwFallbackManager.getInstance();
+
+        // 先檢查功能是否啟用
+        if (!manager.isEnabled())
+            return;
+
         if (manager.contains(key)) {
             cir.setReturnValue(manager.get(key));
         }

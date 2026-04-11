@@ -11,18 +11,21 @@
   "bk_tools.config.generic.name.force_debug_mode": "強制 Debug 模式",
   "bk_tools.config.generic.comment.force_debug_mode": "手動開啟 Debug 模式，顯示測試標籤頁與詳細 log，設定會被儲存。",
 
-  "bk_tools.config.cn2tw.name.cn2tw_enable_fallback": "啟用簡中 Fallback",
-  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "§6 開發中功能 §r\n繁體中文缺少翻譯時，自動從簡體中文補充\n第一次啟用，後需要重啟遊戲才能生效",
-
-  "bk_tools.config.cn2tw.name.cn2tw_dump_debug": "輸出 CN2TW 除錯檔案",
-  "bk_tools.config.cn2tw.comment.cn2tw_dump_debug": "將目前的 fallback map 寫出到 config/bktools_debug/",
-  "bk_tools.message.cn2tw_dump_done": "[BKTools] CN2TW 除錯檔案已輸出：%s",
+  "bk_tools.message.cooldown_wait": "§c請勿重複觸發，稍後再試。 %s",
 
   "bk_tools.config.test.name.bktools_say_hello": "Hello World",
   "bk_tools.config.test.comment.bktools_say_hello": "按下後顯示 Hello World! BKTools is working! 訊息",
 
   "bk_tools.config.test.name.test_hello_button": "執行 Hello",
   "bk_tools.config.test.comment.test_hello_button": "點擊觸發 Hello World 測試功能",
+  "bk_tools.config.btnTrigger.hello": "測試按鈕",
+
+  "bk_tools.config.cn2tw.name.cn2tw_enable_fallback": "啟用簡中 Fallback",
+  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "繁體中文缺少翻譯時，自動從簡體中文補充\n點擊「輸出除錯檔案」刷新資源並輸出檔案",
+
+  "bk_tools.config.cn2tw.name.cn2tw_dump_lang_file": "輸出語言檔案",
+  "bk_tools.config.cn2tw.comment.cn2tw_dump_lang_file": "點擊刷新語言資源並輸出 JSON 檔案到 config/bktools_debug/",
+  "bk_tools.config.btnTrigger.cn2tw_dump_lang_file": "輸出 .json 文件",
 
   "bk_tools.config.commandBind.name.command_1": "綁定命令 #1",
   "bk_tools.config.commandBind.comment.command_1": "按下快捷鍵時，執行綁定的命令 #1",
@@ -64,11 +67,6 @@
   "bk_tools.config.commandBind.comment.command_0": "按下快捷鍵時，執行綁定的命令 #0",
   "bk_tools.config.commandBind.name.hotkey_0": "綁定快捷鍵 #0",
   "bk_tools.config.commandBind.comment.hotkey_0": "按下後觸發上述所綁定的命令 #0",
-
-  "bk_tools.config.btnTrigger.execute": "執行",
-  "bk_tools.config.btnTrigger.hello": "測試按鈕",
-  "bk_tools.config.btnTrigger.cn2tw_dump_debug": "輸出 .json 文件",
-  "bk_tools.message.cooldown_wait": "§c請勿重複觸發，稍後再試。 %s",
 
   "bk_tools.config.loopMode.sequential": "順序",
   "bk_tools.config.loopMode.random": "隨機",
