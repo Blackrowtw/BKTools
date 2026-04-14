@@ -2,7 +2,13 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  Fallen_Breath and contributors
+ * Copyright (C) 2026 BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)
+ *
+ * Based on fabric-mod-template by Fallen_Breath
+ * See: https://github.com/Fallen-Breath/fabric-mod-template
+ *
+ * This project uses the malilib library by masa and sakura-ryoko
+ * See: https://github.com/sakura-ryoko/malilib
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,10 +30,15 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.malilib.gui.GuiBase;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+
 import me.blackrowtw.bk_tools.util.DebugLogger;
 import me.blackrowtw.bk_tools.util.SendChatMessage;
 import me.blackrowtw.bk_tools.util.SendTitleMessage;
-import net.minecraft.ChatFormatting;
 
 public class ShowHelloActions {
 
@@ -36,6 +47,19 @@ public class ShowHelloActions {
      * 可被熱鍵回調或 ConfigAction 按鈕呼叫
      */
     public static void executeHello() {
+        Minecraft mc = Minecraft.getInstance();
+        var currentScreen = GuiUtils.getCurrentScreen();
+
+        if (currentScreen instanceof GuiBase guiBase) {
+            guiBase.onClose();
+            mc.execute(() -> showHelloMessage()); // 延後到下一幀執行，確保 GUI 完全關閉後再顯示 Title
+        } else {
+            // 沒有 GUI，直接執行
+            showHelloMessage();
+        }
+    }
+
+    private static void showHelloMessage() {
         try {
             SendTitleMessage.of("Hello World!", "BKTools is working!")
                     .time(20, 80, 30)
