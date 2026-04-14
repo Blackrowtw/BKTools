@@ -28,7 +28,6 @@ import fi.dy.masa.malilib.config.gui.ConfigOptionListenerResetConfig.ConfigReset
 import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.ConfigButtonKeybind;
-import fi.dy.masa.malilib.gui.button.ConfigButtonStringList;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOption;
 import fi.dy.masa.malilib.gui.widgets.WidgetHoverInfo;
@@ -40,6 +39,7 @@ import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindList;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindListMode;
 import me.blackrowtw.bk_tools.config.widget.ConfigBtnTrigger;
 import me.blackrowtw.bk_tools.config.gui.button.ConfigBtnTriggerButton;
+import me.blackrowtw.bk_tools.config.gui.button.CommandListButton;
 
 /**
  * BKTools 自訂 GUI Widget
@@ -84,7 +84,7 @@ public class BKToolsWidgetConfigOption extends WidgetConfigOption {
 
     // ── 共用 Widget 引用 ──
     private ConfigButtonKeybind keybindButton;
-    private ConfigButtonStringList stringListButton;
+    private CommandListButton stringListButton;
 
     public BKToolsWidgetConfigOption(int x, int y, int width, int height, int labelWidth, int configWidth,
             fi.dy.masa.malilib.gui.GuiConfigsBase.ConfigOptionWrapper wrapper,
@@ -225,9 +225,9 @@ public class BKToolsWidgetConfigOption extends WidgetConfigOption {
 
         x += labelWidth + 10;
 
-        // 命令清單按鈕（65%），顯示「N commands」，左右各內縮 2px
+        // 命令清單按鈕（65%），顯示「N commands」，黑底白框樣式
         int listButtonWidth = (int) ((configWidth - 22) * 0.65);
-        this.stringListButton = new ConfigButtonStringList(
+        this.stringListButton = new CommandListButton(
                 x + 1, y, listButtonWidth - 2, configHeight, entry.getCommandsConfig(), this.host,
                 this.host.getDialogHandler());
         this.updateStringListButtonDisplay(entry);
@@ -401,12 +401,12 @@ public class BKToolsWidgetConfigOption extends WidgetConfigOption {
      */
     private static class CommandBindListResetter extends ConfigResetterBase {
         private final fi.dy.masa.malilib.config.options.ConfigStringList commandsConfig;
-        private final ConfigButtonStringList listButton;
+        private final CommandListButton listButton;
         private final ConfigButtonKeybind keybindButton;
         private final ConfigCommandBindList entry;
 
         CommandBindListResetter(fi.dy.masa.malilib.config.options.ConfigStringList commandsConfig,
-                ConfigButtonStringList listButton, ConfigButtonKeybind keybindButton,
+                CommandListButton listButton, ConfigButtonKeybind keybindButton,
                 ConfigCommandBindList entry) {
             this.commandsConfig = commandsConfig;
             this.listButton = listButton;

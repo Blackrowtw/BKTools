@@ -26,15 +26,20 @@ import fi.dy.masa.malilib.render.GuiContext;
 import fi.dy.masa.malilib.render.RenderUtils;
 
 /**
- * 自訂觸發按鈕：灰色背景 + hover 淡藍色文字
+ * 自訂觸發按鈕：黑底白框樣式（類似文字輸入框）+ hover 淡藍色效果
  * 如果自訂渲染失效，回退到 MaliLib 原始渲染
  */
 public class ConfigBtnTriggerButton extends ConfigButtonOptionList {
 
-    // 低調灰色背景 (ARGB)
-    private static final int BG_COLOR = 0x66404040;
-
-    // Minecraft 超連結淡藍色 #55FFFF (ARGB)
+    // 背景：純黑 RGB 0,0,0 #000000 (ARGB)
+    private static final int BG_COLOR = 0xFF000000;
+    // 文字默認：淺灰 RGB 224,224,224 #E0E0E0 (ARGB)
+    private static final int TEXT_COLOR = 0xFFE0E0E0;
+    // 邊框默認：灰色 RGB 160,160,160 #A0A0A0 (ARGB)
+    private static final int BORDER_COLOR = 0xFFA0A0A0;
+    // 邊框 hover：淡藍色 RGB 85,255,255 #55FFFF (ARGB)
+    private static final int HOVER_BORDER_COLOR = 0xFF55FFFF;
+    // 文字 hover：淡藍色 RGB 85,255,255 #55FFFF (ARGB)
     private static final int HOVER_TEXT_COLOR = 0xFF55FFFF;
 
     public ConfigBtnTriggerButton(int x, int y, int width, int height, IConfigOptionList config) {
@@ -47,13 +52,26 @@ public class ConfigBtnTriggerButton extends ConfigButtonOptionList {
             this.hovered = mouseX >= this.x && mouseY >= this.y &&
                     mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-            // 繪製自訂灰色背景
-            RenderUtils.drawRect(ctx, this.x, this.y, this.width, this.height, BG_COLOR);
+            // 選擇邊框顏色（hover 時變淡藍色）
+            int borderColor = this.hovered ? HOVER_BORDER_COLOR : BORDER_COLOR;
+
+            // 繪製邊框（1px）- 環繞整個按鈕區域
+            // 上邊框
+            RenderUtils.drawRect(ctx, this.x, this.y, this.width, 1, borderColor);
+            // 下邊框
+            RenderUtils.drawRect(ctx, this.x, this.y + this.height - 1, this.width, 1, borderColor);
+            // 左邊框
+            RenderUtils.drawRect(ctx, this.x, this.y, 1, this.height, borderColor);
+            // 右邊框
+            RenderUtils.drawRect(ctx, this.x + this.width - 1, this.y, 1, this.height, borderColor);
+
+            // 繪製黑色背景（在邊框內部）
+            RenderUtils.drawRect(ctx, this.x + 1, this.y + 1, this.width - 2, this.height - 2, BG_COLOR);
 
             // 繪製文字（hover 時使用淡藍色）
             if (this.displayString != null && !this.displayString.isEmpty()) {
                 int y = this.y + (this.height - 8) / 2;
-                int color = this.enabled ? (this.hovered ? HOVER_TEXT_COLOR : 0xFFE0E0E0) : 0xFFA0A0A0;
+                int color = this.enabled ? (this.hovered ? HOVER_TEXT_COLOR : TEXT_COLOR) : 0xFF808080;
                 this.drawCenteredStringWithShadow(ctx, this.x + this.width / 2, y, color, this.displayString);
             }
         } catch (Exception e) {
