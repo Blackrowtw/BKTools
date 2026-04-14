@@ -121,28 +121,64 @@ public class Configs implements IConfigHandler {
 
         // ── Cn2Tw：簡繁 fallback 功能 ────────────────────────────
         public static class Cn2Tw {
+
+                /**
+                 * 開關：啟用 zh_cn → zh_tw fallback
+                 * 開啟時立即非同步刷新 fallbackMap（由 KeyCallbackRegistry 監聽）
+                 * 關閉時立即清空 fallbackMap
+                 */
                 public static final ConfigBoolean CN2TW_ENABLE_FALLBACK = new ConfigBoolean(
                                 "cn2tw_enable_fallback", false)
                                 .apply(KEY_CN2TW);
 
                 /**
-                 * 觸發式按鈕：輸出 language map 到 JSON 檔案
-                 * 點擊時先刷新資源，再輸出 JSON 檔案
-                 * 60 ticks（3 秒）冷卻
+                 * 按鈕 1：刷新 Fallback Map
+                 * 非同步重新讀取語言檔案，更新記憶體中的 fallbackMap
+                 * 不輸出檔案，也不重載整包資源，是三者中最輕量的操作
+                 * 冷卻：60 ticks（3 秒）
+                 */
+                public static final ConfigBtnTrigger CN2TW_REFRESH_MAP = new ConfigBtnTrigger(
+                                "cn2tw_refresh_map",
+                                "Refresh the fallback map from current language files (async, no file output)",
+                                () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
+                                                .refreshMap(),
+                                "bk_tools.config.btnTrigger.cn2tw_refresh_map",
+                                60).apply(KEY_CN2TW);
+
+                /**
+                 * 按鈕 2：輸出 Lang Map 到 JSON 檔案
+                 * 先刷新 fallbackMap，再輸出到 config/BKTools_DEBUG/cn2tw_fallback_dump.json
+                 * 輸出格式：按 namespace 分組的巢狀 JSON
+                 * 冷卻：60 ticks（3 秒）
                  */
                 public static final ConfigBtnTrigger CN2TW_DUMP_LANG_FILE = new ConfigBtnTrigger(
                                 "cn2tw_dump_lang_file",
-                                "Write the current language map to config/bktools_debug/",
+                                "Refresh map then write to config/BKTools_DEBUG/cn2tw_fallback_dump.json",
                                 () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
                                                 .dumpLangFile(),
                                 "bk_tools.config.btnTrigger.cn2tw_dump_lang_file",
                                 60).apply(KEY_CN2TW);
 
+                /**
+                 * 按鈕 3：重載資源包（等同 F3+T）
+                 * 觸發後 Cn2TwReloadListener 會自動執行 prepare + apply
+                 * 重載完成後 CN2TW fallbackMap 會自動更新
+                 * 冷卻：200 ticks（10 秒），避免頻繁重載
+                 */
+                public static final ConfigBtnTrigger CN2TW_RELOAD_RESOURCES = new ConfigBtnTrigger(
+                                "cn2tw_reload_resources",
+                                "Reload all resource packs (equivalent to F3+T), CN2TW auto-updates after",
+                                () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
+                                                .reloadResources(),
+                                "bk_tools.config.btnTrigger.cn2tw_reload_resources",
+                                200).apply(KEY_CN2TW);
+
                 // OPTIONS 供 GuiConfigs 顯示用（包含所有型別）
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
                                 CN2TW_ENABLE_FALLBACK,
-                                CN2TW_DUMP_LANG_FILE);
-
+                                CN2TW_REFRESH_MAP,
+                                CN2TW_DUMP_LANG_FILE,
+                                CN2TW_RELOAD_RESOURCES);
         }
 
         // ── Test：測試功能 ────────────────────────────────────────

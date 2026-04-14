@@ -21,11 +21,19 @@
   "bk_tools.config.btnTrigger.hello": "測試按鈕",
 
   "bk_tools.config.cn2tw.name.cn2tw_enable_fallback": "啟用簡中 Fallback",
-  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "繁體中文缺少翻譯時，自動從簡體中文補充\n點擊「輸出除錯檔案」刷新資源並輸出檔案",
+  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "繁體中文缺少翻譯時，自動從簡體中文補充\n開啟時立即刷新，關閉時立即清空\n使用下方三個按鈕手動管理資源",
 
-  "bk_tools.config.cn2tw.name.cn2tw_dump_lang_file": "輸出語言檔案",
-  "bk_tools.config.cn2tw.comment.cn2tw_dump_lang_file": "點擊刷新語言資源並輸出 JSON 檔案到 config/bktools_debug/",
-  "bk_tools.config.btnTrigger.cn2tw_dump_lang_file": "輸出 .json 文件",
+  "bk_tools.config.cn2tw.name.cn2tw_refresh_map": "刷新 Fallback Map",
+  "bk_tools.config.cn2tw.comment.cn2tw_refresh_map": "非同步重新讀取語言檔案，更新記憶體中的 fallback 資料\n不輸出任何檔案，操作最輕量，適合頻繁使用",
+  "bk_tools.config.btnTrigger.cn2tw_refresh_map": "刷新 Map",
+
+  "bk_tools.config.cn2tw.name.cn2tw_dump_lang_file": "輸出 Lang Map",
+  "bk_tools.config.cn2tw.comment.cn2tw_dump_lang_file": "刷新 fallback 資料後，輸出 JSON 到 config/BKTools_DEBUG/\n格式：按 namespace 分組，方便查閱各模組的缺漏翻譯",
+  "bk_tools.config.btnTrigger.cn2tw_dump_lang_file": "輸出 .json",
+
+  "bk_tools.config.cn2tw.name.cn2tw_reload_resources": "重載資源包",
+  "bk_tools.config.cn2tw.comment.cn2tw_reload_resources": "等同 F3+T，重載所有資源包後 CN2TW 自動更新\n冷卻時間較長（10 秒），請勿頻繁使用",
+  "bk_tools.config.btnTrigger.cn2tw_reload_resources": "重載資源 (F3+T)",
 
   "bk_tools.config.commandBind.name.command_1": "綁定命令 #1",
   "bk_tools.config.commandBind.comment.command_1": "按下快捷鍵時，執行綁定的命令 #1",

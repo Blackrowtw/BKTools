@@ -21,11 +21,19 @@
   "bk_tools.config.btnTrigger.hello": "Hello",
 
   "bk_tools.config.cn2tw.name.cn2tw_enable_fallback": "Enable ZH-CN Fallback",
-  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "When ZH-TW translation is missing, fall back to ZH-CN\nClick 'Dump Debug File' to refresh and output file",
+  "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "When ZH-TW translation is missing, fall back to ZH-CN\nEnabling immediately refreshes the map; disabling clears it\nUse the three buttons below to manage resources manually",
 
-  "bk_tools.config.cn2tw.name.cn2tw_dump_lang_file": "Dump Language File",
-  "bk_tools.config.cn2tw.comment.cn2tw_dump_lang_file": "Click to refresh language resources and output JSON to config/bktools_debug/",
-  "bk_tools.config.btnTrigger.cn2tw_dump_lang_file": "Export .json File",
+  "bk_tools.config.cn2tw.name.cn2tw_refresh_map": "Refresh Fallback Map",
+  "bk_tools.config.cn2tw.comment.cn2tw_refresh_map": "Asynchronously reload language files and update the in-memory fallback map\nNo file output, lightest operation — suitable for frequent use",
+  "bk_tools.config.btnTrigger.cn2tw_refresh_map": "Refresh Map",
+
+  "bk_tools.config.cn2tw.name.cn2tw_dump_lang_file": "Dump Lang Map",
+  "bk_tools.config.cn2tw.comment.cn2tw_dump_lang_file": "Refresh fallback data then write JSON to config/BKTools_DEBUG/\nGrouped by namespace for easy review of missing translations",
+  "bk_tools.config.btnTrigger.cn2tw_dump_lang_file": "Export .json",
+
+  "bk_tools.config.cn2tw.name.cn2tw_reload_resources": "Reload Resource Packs",
+  "bk_tools.config.cn2tw.comment.cn2tw_reload_resources": "Equivalent to F3+T — reloads all resource packs, then CN2TW auto-updates\nHas a longer cooldown (10s) — avoid frequent use",
+  "bk_tools.config.btnTrigger.cn2tw_reload_resources": "Reload Resources (F3+T)",
 
   "bk_tools.config.commandBind.name.command_1": "Command 1",
   "bk_tools.config.commandBind.comment.command_1": "Command to execute (start with / for commands)",
