@@ -21,6 +21,7 @@
 // 初始化並串接所有功能的地方，註冊設定處理器、設定介面工廠、快捷鍵提供者等
 package me.blackrowtw.bk_tools.init;
 
+import fi.dy.masa.malilib.command.ClientCommandHandler;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
@@ -28,6 +29,7 @@ import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.data.ModInfo;
 
 import me.blackrowtw.bk_tools.Reference;
+import me.blackrowtw.bk_tools.command.BkHelloCommand;
 import me.blackrowtw.bk_tools.config.Configs;
 import me.blackrowtw.bk_tools.config.GuiConfigs;
 import me.blackrowtw.bk_tools.config.InputHandler;
@@ -48,5 +50,7 @@ public class InitHandler implements IInitializationHandler {
                                 .registerKeybindProvider(InputHandler.getInstance());
                 // 4. 登錄所有快捷鍵 callback
                 KeyCallbackRegistry.register();
+                // 5. 登錄客戶端命令
+                ClientCommandHandler.INSTANCE.registerCommand(new BkHelloCommand());
         }
 }
