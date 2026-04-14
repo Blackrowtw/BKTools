@@ -63,22 +63,35 @@
   "bk_tools.config.commandBind.comment.command_9": "Command to execute (start with / for commands)",
   "bk_tools.config.commandBind.name.hotkey_9": "Hotkey 9",
   "bk_tools.config.commandBind.comment.hotkey_9": "Hotkey to execute Command 9",
-  "bk_tools.config.commandBind.name.command_0": "Command 0",
-  "bk_tools.config.commandBind.comment.command_0": "Command to execute (start with / for commands)",
-  "bk_tools.config.commandBind.name.hotkey_0": "Hotkey 0",
-  "bk_tools.config.commandBind.comment.hotkey_0": "Hotkey to execute Command 0",
 
   "bk_tools.config.loopMode.sequential": "Sequential",
   "bk_tools.config.loopMode.random": "Random",
   "bk_tools.config.loopMode.fixed": "Fixed",
 
-  "bk_tools.config.commandBindList.name.list_1": "Command List",
+  "bk_tools.config.commandBindList.name.list_1": "Command List 1",
   "bk_tools.config.commandBindList.comment.list_1": "Command list to execute in sequence or random order",
-
-  "bk_tools.config.commandBindListMode.name.list_1_mode": "Loop Mode",
+  "bk_tools.config.commandBindListMode.name.list_1_mode": "Loop Mode 1",
   "bk_tools.config.commandBindListMode.comment.list_1_mode": "Loop mode and mode-switch hotkey",
   "bk_tools.config.commandBindListMode.name.list_1_mode_loopMode": "Loop Mode",
   "bk_tools.config.commandBindListMode.comment.list_1_mode_loopMode": "Loop mode for the command list",
   "bk_tools.config.commandBindListMode.name.list_1_mode_modeHotkey": "Mode Switch Hotkey",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode_modeHotkey": "Hotkey to cycle through loop modes"
+  "bk_tools.config.commandBindListMode.comment.list_1_mode_modeHotkey": "Hotkey to cycle through loop modes",
+
+  "bk_tools.config.commandBindList.name.list_2": "Command List 2",
+  "bk_tools.config.commandBindList.comment.list_2": "Command list to execute in sequence or random order",
+  "bk_tools.config.commandBindListMode.name.list_2_mode": "Loop Mode 2",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode": "Loop mode and mode-switch hotkey",
+  "bk_tools.config.commandBindListMode.name.list_2_mode_loopMode": "Loop Mode",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode_loopMode": "Loop mode for the command list",
+  "bk_tools.config.commandBindListMode.name.list_2_mode_modeHotkey": "Mode Switch Hotkey",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode_modeHotkey": "Hotkey to cycle through loop modes",
+
+  "bk_tools.config.commandBindList.name.list_3": "Command List 3",
+  "bk_tools.config.commandBindList.comment.list_3": "Command list to execute in sequence or random order",
+  "bk_tools.config.commandBindListMode.name.list_3_mode": "Loop Mode 3",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode": "Loop mode and mode-switch hotkey",
+  "bk_tools.config.commandBindListMode.name.list_3_mode_loopMode": "Loop Mode",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode_loopMode": "Loop mode for the command list",
+  "bk_tools.config.commandBindListMode.name.list_3_mode_modeHotkey": "Mode Switch Hotkey",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode_modeHotkey": "Hotkey to cycle through loop modes"
 }

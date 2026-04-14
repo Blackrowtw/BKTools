@@ -63,22 +63,38 @@
   "bk_tools.config.commandBind.comment.command_9": "按下快捷鍵時，執行綁定的命令 #9",
   "bk_tools.config.commandBind.name.hotkey_9": "綁定快捷鍵 #9",
   "bk_tools.config.commandBind.comment.hotkey_9": "按下後觸發上述所綁定的命令 #9",
-  "bk_tools.config.commandBind.name.command_0": "綁定命令 #0",
-  "bk_tools.config.commandBind.comment.command_0": "按下快捷鍵時，執行綁定的命令 #0",
-  "bk_tools.config.commandBind.name.hotkey_0": "綁定快捷鍵 #0",
-  "bk_tools.config.commandBind.comment.hotkey_0": "按下後觸發上述所綁定的命令 #0",
 
   "bk_tools.config.loopMode.sequential": "順序",
   "bk_tools.config.loopMode.random": "隨機",
   "bk_tools.config.loopMode.fixed": "固定",
 
-  "bk_tools.config.commandBindList.name.list_1": "命令清單",
-  "bk_tools.config.commandBindList.comment.list_1": "依序或隨機執行清單中的命令",
+  "bk_tools.config.commandBindList.name.list_1": "命令清單 #1",
+  "bk_tools.config.commandBindList.comment.list_1": "固定、依序或隨機執行清單中的命令",
 
-  "bk_tools.config.commandBindListMode.name.list_1_mode": "循環模式",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode": "循環模式與模式切換快捷鍵",
+  "bk_tools.config.commandBindListMode.name.list_1_mode": "清單模式 #1",
+  "bk_tools.config.commandBindListMode.comment.list_1_mode": "循環模式選擇與模式切換快捷鍵",
   "bk_tools.config.commandBindListMode.name.list_1_mode_loopMode": "循環模式",
   "bk_tools.config.commandBindListMode.comment.list_1_mode_loopMode": "命令清單的循環模式",
   "bk_tools.config.commandBindListMode.name.list_1_mode_modeHotkey": "模式切換快捷鍵",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode_modeHotkey": "按下後循環切換順序 → 隨機 → 固定"
+  "bk_tools.config.commandBindListMode.comment.list_1_mode_modeHotkey": "按下後循環切換順序 → 隨機 → 固定",
+
+  "bk_tools.config.commandBindList.name.list_2": "命令清單 #2",
+  "bk_tools.config.commandBindList.comment.list_2": "固定、依序或隨機執行清單中的命令",
+
+  "bk_tools.config.commandBindListMode.name.list_2_mode": "清單模式 #2",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode": "循環模式選擇與模式切換快捷鍵",
+  "bk_tools.config.commandBindListMode.name.list_2_mode_loopMode": "循環模式",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode_loopMode": "命令清單的循環模式",
+  "bk_tools.config.commandBindListMode.name.list_2_mode_modeHotkey": "模式切換快捷鍵",
+  "bk_tools.config.commandBindListMode.comment.list_2_mode_modeHotkey": "按下後循環切換順序 → 隨機 → 固定",
+
+  "bk_tools.config.commandBindList.name.list_3": "命令清單 #3",
+  "bk_tools.config.commandBindList.comment.list_3": "固定、依序或隨機執行清單中的命令",
+
+  "bk_tools.config.commandBindListMode.name.list_3_mode": "清單模式 #3",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode": "循環模式選擇與模式切換快捷鍵",
+  "bk_tools.config.commandBindListMode.name.list_3_mode_loopMode": "循環模式",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode_loopMode": "命令清單的循環模式",
+  "bk_tools.config.commandBindListMode.name.list_3_mode_modeHotkey": "模式切換快捷鍵",
+  "bk_tools.config.commandBindListMode.comment.list_3_mode_modeHotkey": "按下後循環切換順序 → 隨機 → 固定"
 }

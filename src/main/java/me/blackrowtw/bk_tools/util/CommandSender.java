@@ -24,32 +24,32 @@ import fi.dy.masa.malilib.util.game.wrap.GameWrap;
 
 /**
  * 命令發送工具
- * 使用 MaliLib GameWrap 作為底層，版本相容性由 MaliLib 維護
+ * 使用 Minecraft.player.networkHandler 發送命令到服務器
  *
  * 行為：
- * - 以 / 開頭的字串視為命令（自動去除 / 後發送）
- * - 非 / 開頭的字串視為聊天訊息
+ * - 以 / 開頭的字串視為命令（發送到服務器執行）
+ * - 非 / 開頭的字串視為聊天訊息（發送到服務器）
  */
+
 public class CommandSender {
-
-    private CommandSender() {
-    }
-
-    /**
-     * 發送命令或聊天訊息
-     *
-     * @param input 命令字串，以 / 開頭視為命令，否則視為聊天訊息
-     * @return 是否成功發送
-     */
     public static boolean send(String input) {
         if (input == null || input.isBlank()) {
             return false;
         }
 
-        if (input.startsWith("/")) {
-            return GameWrap.sendCommand(input.substring(1));
-        } else {
-            return GameWrap.sendChatMessage(input);
+        var handler = GameWrap.getNetworkConnection();
+        if (handler == null) {
+            return false;
         }
+
+        String command = input.startsWith("/") ? input.substring(1) : input;
+
+        if (input.startsWith("/")) {
+            handler.sendCommand(command);
+        } else {
+            handler.sendChat(command);
+        }
+
+        return true;
     }
 }

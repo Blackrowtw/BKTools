@@ -112,16 +112,11 @@ public class Configs implements IConfigHandler {
                                 9, "/me =⩌⩊⩌= < no.9", "", "Command to execute (start with / for commands)")
                                 .apply(KEY_COMMAND_BIND);
 
-                public static final ConfigCommandBind COMMAND_BIND_0 = new ConfigCommandBind(
-                                0, "/me =⩌⩊⩌= < no.0", "", "Command to execute (start with / for commands)")
-                                .apply(KEY_COMMAND_BIND);
-
                 // OPTIONS 供 GuiConfigs 顯示（每組只佔一行）
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
                                 COMMAND_BIND_1, COMMAND_BIND_2, COMMAND_BIND_3,
                                 COMMAND_BIND_4, COMMAND_BIND_5, COMMAND_BIND_6,
-                                COMMAND_BIND_7, COMMAND_BIND_8, COMMAND_BIND_9,
-                                COMMAND_BIND_0);
+                                COMMAND_BIND_7, COMMAND_BIND_8, COMMAND_BIND_9);
         }
 
         // ── Cn2Tw：簡繁 fallback 功能 ────────────────────────────
@@ -176,33 +171,88 @@ public class Configs implements IConfigHandler {
         public static class CommandBindLoop {
 
                 /**
-                 * 命令清單綁定（Row 1）：命令清單 + 執行快捷鍵
+                 * 命令清單綁定（List 1）：命令清單 + 執行快捷鍵
                  */
                 public static final ConfigCommandBindList COMMAND_BIND_LIST_1 = new ConfigCommandBindList(
                                 "list_1",
-                                java.util.List.of(),
+                                java.util.List.of("/me =⩌⩊⩌= < CMB List #1 - Fix mode"),
                                 "",
                                 "Command list to execute in sequence or random order")
                                 .apply(KEY_COMMAND_BIND_LOOP);
 
                 /**
-                 * 命令清單模式切換（Row 2）：循環模式 + 模式切換快捷鍵
+                 * 命令清單模式切換（List 1 Mode）：循環模式 + 模式切換快捷鍵
                  */
                 public static final ConfigCommandBindListMode COMMAND_BIND_LIST_1_MODE = new ConfigCommandBindListMode(
                                 "list_1_mode",
                                 COMMAND_BIND_LIST_1,
+                                LoopMode.FIXED,
+                                "",
+                                "Loop mode and mode-switch hotkey")
+                                .apply(KEY_COMMAND_BIND_LOOP);
+
+                /**
+                 * 命令清單綁定（List 2）：命令清單 + 執行快捷鍵
+                 */
+                public static final ConfigCommandBindList COMMAND_BIND_LIST_2 = new ConfigCommandBindList(
+                                "list_2",
+                                java.util.List.of("/me =⩌⩊⩌= < CMB List #2 - Sequential mode 1",
+                                                "/me =⩌⩊⩌= < CMB List #2 - Sequential mode 2",
+                                                "/me =⩌⩊⩌= < CMB List #2 - Sequential mode 3"),
+                                "",
+                                "Command list to execute in sequence or random order")
+                                .apply(KEY_COMMAND_BIND_LOOP);
+
+                /**
+                 * 命令清單模式切換（List 2 Mode）：循環模式 + 模式切換快捷鍵
+                 */
+                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_2_MODE = new ConfigCommandBindListMode(
+                                "list_2_mode",
+                                COMMAND_BIND_LIST_2,
                                 LoopMode.SEQUENTIAL,
+                                "",
+                                "Loop mode and mode-switch hotkey")
+                                .apply(KEY_COMMAND_BIND_LOOP);
+
+                /**
+                 * 命令清單綁定（List 3）：命令清單 + 執行快捷鍵
+                 */
+                public static final ConfigCommandBindList COMMAND_BIND_LIST_3 = new ConfigCommandBindList(
+                                "list_3",
+                                java.util.List.of("/me =⩌⩊⩌= < ⚀",
+                                                "/me =⩌⩊⩌= < ⚁",
+                                                "/me =⩌⩊⩌= < ⚂",
+                                                "/me =⩌⩊⩌= < ⚃",
+                                                "/me =⩌⩊⩌= < ⚄",
+                                                "/me =⩌⩊⩌= < ⚅"),
+                                "",
+                                "Command list to execute in sequence or random order")
+                                .apply(KEY_COMMAND_BIND_LOOP);
+
+                /**
+                 * 命令清單模式切換（List 3 Mode）：循環模式 + 模式切換快捷鍵
+                 */
+                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_3_MODE = new ConfigCommandBindListMode(
+                                "list_3_mode",
+                                COMMAND_BIND_LIST_3,
+                                LoopMode.RANDOM,
                                 "",
                                 "Loop mode and mode-switch hotkey")
                                 .apply(KEY_COMMAND_BIND_LOOP);
 
                 static {
                         COMMAND_BIND_LIST_1.setModeConfig(COMMAND_BIND_LIST_1_MODE);
+                        COMMAND_BIND_LIST_2.setModeConfig(COMMAND_BIND_LIST_2_MODE);
+                        COMMAND_BIND_LIST_3.setModeConfig(COMMAND_BIND_LIST_3_MODE);
                 }
 
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
                                 COMMAND_BIND_LIST_1,
-                                COMMAND_BIND_LIST_1_MODE);
+                                COMMAND_BIND_LIST_1_MODE,
+                                COMMAND_BIND_LIST_2,
+                                COMMAND_BIND_LIST_2_MODE,
+                                COMMAND_BIND_LIST_3,
+                                COMMAND_BIND_LIST_3_MODE);
         }
 
         // ── 設定檔讀寫 ────────────────────────────────────────────
