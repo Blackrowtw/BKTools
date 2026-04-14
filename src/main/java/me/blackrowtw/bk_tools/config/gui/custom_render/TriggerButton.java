@@ -18,7 +18,7 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.blackrowtw.bk_tools.config.gui.button;
+package me.blackrowtw.bk_tools.config.gui.custom_render;
 
 import fi.dy.masa.malilib.config.IConfigOptionList;
 import fi.dy.masa.malilib.gui.button.ConfigButtonOptionList;
@@ -29,7 +29,7 @@ import fi.dy.masa.malilib.render.RenderUtils;
  * 自訂觸發按鈕：黑底白框樣式（類似文字輸入框）+ hover 淡藍色效果
  * 如果自訂渲染失效，回退到 MaliLib 原始渲染
  */
-public class ConfigBtnTriggerButton extends ConfigButtonOptionList {
+public class TriggerButton extends ConfigButtonOptionList {
 
     // 背景：純黑 RGB 0,0,0 #000000 (ARGB)
     private static final int BG_COLOR = 0xFF000000;
@@ -42,7 +42,7 @@ public class ConfigBtnTriggerButton extends ConfigButtonOptionList {
     // 文字 hover：淡藍色 RGB 85,255,255 #55FFFF (ARGB)
     private static final int HOVER_TEXT_COLOR = 0xFF55FFFF;
 
-    public ConfigBtnTriggerButton(int x, int y, int width, int height, IConfigOptionList config) {
+    public TriggerButton(int x, int y, int width, int height, IConfigOptionList config) {
         super(x, y, width, height, config);
     }
 

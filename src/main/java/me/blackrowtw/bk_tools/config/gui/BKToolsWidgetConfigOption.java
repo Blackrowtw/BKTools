@@ -38,8 +38,8 @@ import me.blackrowtw.bk_tools.config.widget.ConfigCommandBind;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindList;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindListMode;
 import me.blackrowtw.bk_tools.config.widget.ConfigBtnTrigger;
-import me.blackrowtw.bk_tools.config.gui.button.ConfigBtnTriggerButton;
-import me.blackrowtw.bk_tools.config.gui.button.CommandListButton;
+import me.blackrowtw.bk_tools.config.gui.custom_render.TriggerButton;
+import me.blackrowtw.bk_tools.config.gui.custom_render.CommandListButton;
 
 /**
  * BKTools 自訂 GUI Widget
@@ -361,7 +361,7 @@ public class BKToolsWidgetConfigOption extends WidgetConfigOption {
         // 觸發按鈕 使用自訂灰色背景 + hover 淡藍色文字
         // 扣除重設按鈕空間（14px）以及設定按鈕空間（22px）
         int btnWidth = configWidth;
-        ConfigBtnTriggerButton triggerBtn = new ConfigBtnTriggerButton(
+        TriggerButton triggerBtn = new TriggerButton(
                 x + 4, y + 1, btnWidth + 22, configHeight, entry);
         triggerBtn.updateDisplayString();
 

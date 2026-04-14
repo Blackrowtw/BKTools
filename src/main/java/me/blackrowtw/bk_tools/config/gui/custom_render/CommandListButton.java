@@ -18,7 +18,7 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.blackrowtw.bk_tools.config.gui.button;
+package me.blackrowtw.bk_tools.config.gui.custom_render;
 
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.input.MouseButtonEvent;

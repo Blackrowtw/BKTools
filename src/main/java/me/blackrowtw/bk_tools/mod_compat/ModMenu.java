@@ -18,7 +18,7 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.blackrowtw.bk_tools.modCompat;
+package me.blackrowtw.bk_tools.mod_compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

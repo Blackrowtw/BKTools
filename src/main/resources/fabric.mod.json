@@ -17,7 +17,7 @@
   "entrypoints": {
     "main": ["me.blackrowtw.bk_tools.BKTools"],
     "client": ["me.blackrowtw.bk_tools.BKToolsClient"],
-    "modmenu": ["me.blackrowtw.bk_tools.modCompat.ModMenu"]
+    "modmenu": ["me.blackrowtw.bk_tools.mod_compat.ModMenu"]
   },
   "mixins": [
     {
