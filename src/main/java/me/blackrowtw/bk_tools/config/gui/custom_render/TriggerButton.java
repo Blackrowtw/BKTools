@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config.gui.custom_render;
 
 import fi.dy.masa.malilib.config.IConfigOptionList;
@@ -38,10 +37,10 @@ import fi.dy.masa.malilib.render.RenderUtils;
  */
 public class TriggerButton extends ConfigButtonOptionList {
 
-    // 背景：純黑 RGB 0,0,0 #000000 (ARGB)
-    private static final int BG_COLOR = 0xFF000000;
-    // 文字默認：淺灰 RGB 224,224,224 #E0E0E0 (ARGB)
-    private static final int TEXT_COLOR = 0xFFE0E0E0;
+    // 背景：純黑 RGB 0,0,0 #0000003f (ARGB)
+    private static final int BG_COLOR = 0x3F000000;
+    // 文字默認：淺灰 RGB 224,224,224 #808080 (ARGB)
+    private static final int TEXT_COLOR = 0xFF808080;
     // 邊框默認：灰色 RGB 160,160,160 #A0A0A0 (ARGB)
     private static final int BORDER_COLOR = 0xFFA0A0A0;
     // 邊框 hover：淡藍色 RGB 85,255,255 #55FFFF (ARGB)
