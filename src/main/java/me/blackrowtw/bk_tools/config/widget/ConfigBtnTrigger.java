@@ -2,7 +2,13 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  Fallen_Breath and contributors
+ * Copyright (C) 2026 BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)
+ *
+ * Based on fabric-mod-template by Fallen_Breath
+ * See: https://github.com/Fallen-Breath/fabric-mod-template
+ *
+ * This project uses the malilib library by masa and sakura-ryoko
+ * See: https://github.com/sakura-ryoko/malilib
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +23,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 
 package me.blackrowtw.bk_tools.config.widget;
 
@@ -39,29 +46,27 @@ import fi.dy.masa.malilib.util.StringUtils;
  * 內建冷卻機制，預設 20 ticks（1 秒），可自訂
  *
  * 使用範例：
+ * 
  * <pre>
  * // 預設 20 ticks 冷卻，預設顯示名稱 "執行"
  * public static final ConfigBtnTrigger MY_ACTION = new ConfigBtnTrigger(
- *     "my_action",
- *     "Do Something",
- *     () -> MyFeature.execute()
- * ).apply(KEY_PREFIX);
+ *         "my_action",
+ *         "Do Something",
+ *         () -> MyFeature.execute()).apply(KEY_PREFIX);
  *
  * // 自訂冷卻 60 ticks（3 秒）
  * public static final ConfigBtnTrigger SLOW_ACTION = new ConfigBtnTrigger(
- *     "slow_action",
- *     "Do Something Slow",
- *     () -> MyFeature.execute(),
- *     60
- * ).apply(KEY_PREFIX);
+ *         "slow_action",
+ *         "Do Something Slow",
+ *         () -> MyFeature.execute(),
+ *         60).apply(KEY_PREFIX);
  *
  * // 自訂顯示名稱翻譯 key
  * public static final ConfigBtnTrigger RELOAD_ACTION = new ConfigBtnTrigger(
- *     "reload_action",
- *     "Reload configurations",
- *     () -> Configs.reload(),
- *     "bk_tools.config.btnTrigger.reload"
- * ).apply(KEY_PREFIX);
+ *         "reload_action",
+ *         "Reload configurations",
+ *         () -> Configs.reload(),
+ *         "bk_tools.config.btnTrigger.reload").apply(KEY_PREFIX);
  * </pre>
  */
 public class ConfigBtnTrigger extends ConfigBase<ConfigBtnTrigger>

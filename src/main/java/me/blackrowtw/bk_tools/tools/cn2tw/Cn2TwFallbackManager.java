@@ -2,7 +2,13 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  BlacKrowtw and contributors
+ * Copyright (C) 2026 BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)
+ *
+ * Based on fabric-mod-template by Fallen_Breath
+ * See: https://github.com/Fallen-Breath/fabric-mod-template
+ *
+ * This project uses the malilib library by masa and sakura-ryoko
+ * See: https://github.com/sakura-ryoko/malilib
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +23,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 
 package me.blackrowtw.bk_tools.tools.cn2tw;
 

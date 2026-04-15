@@ -2,7 +2,13 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  Fallen_Breath and contributors
+ * Copyright (C) 2026 BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)
+ *
+ * Based on fabric-mod-template by Fallen_Breath
+ * See: https://github.com/Fallen-Breath/fabric-mod-template
+ *
+ * This project uses the malilib library by masa and sakura-ryoko
+ * See: https://github.com/sakura-ryoko/malilib
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +23,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 
 package me.blackrowtw.bk_tools.config.widget;
 
@@ -58,9 +65,9 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
      * 建立命令清單綁定 Config
      *
      * @param name            Config 名稱
-     * @param defaultCommands  預設命令清單
-     * @param defaultHotkey    預設快捷鍵字串（如 "B,H"）
-     * @param comment          註解文字
+     * @param defaultCommands 預設命令清單
+     * @param defaultHotkey   預設快捷鍵字串（如 "B,H"）
+     * @param comment         註解文字
      */
     public ConfigCommandBindList(String name, List<String> defaultCommands, String defaultHotkey, String comment) {
         super(ConfigType.HOTKEY, name, comment);
@@ -100,7 +107,8 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
      */
     public void execute() {
         List<String> list = this.commands.getStrings();
-        if (list.isEmpty()) return;
+        if (list.isEmpty())
+            return;
 
         // 邊界保護：currentIndex 超出範圍時重置
         if (this.currentIndex >= list.size()) {
@@ -250,15 +258,15 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
 
             // 檢查是否有變更
             if (!oldCommands.equals(this.commands.getStrings()) ||
-                !oldHotkey.equals(this.hotkey.getStringValue()) ||
-                oldIndex != this.currentIndex ||
-                this.isDirty()) {
+                    !oldHotkey.equals(this.hotkey.getStringValue()) ||
+                    oldIndex != this.currentIndex ||
+                    this.isDirty()) {
                 this.markClean();
                 this.onValueChanged();
             }
         } catch (Exception e) {
             MaLiLib.LOGGER.warn(
-                "Failed to set config value for '{}' from JSON: {}", this.getName(), element, e);
+                    "Failed to set config value for '{}' from JSON: {}", this.getName(), element, e);
         }
     }
 

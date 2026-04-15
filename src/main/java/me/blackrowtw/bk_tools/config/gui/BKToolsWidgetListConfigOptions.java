@@ -2,7 +2,13 @@
  * This file is part of the BKTools project, licensed under the
  * GNU Lesser General Public License v3.0
  *
- * Copyright (C) 2026  Fallen_Breath and contributors
+ * Copyright (C) 2026 BlacKrowtw (Template by Fallen_Breath, Uses malilib by masa & sakura-ryoko)
+ *
+ * Based on fabric-mod-template by Fallen_Breath
+ * See: https://github.com/Fallen-Breath/fabric-mod-template
+ *
+ * This project uses the malilib library by masa and sakura-ryoko
+ * See: https://github.com/sakura-ryoko/malilib
  *
  * BKTools is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +24,7 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 package me.blackrowtw.bk_tools.config.gui;
 
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
@@ -31,16 +38,17 @@ import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptions;
 public class BKToolsWidgetListConfigOptions extends WidgetListConfigOptions {
 
     public BKToolsWidgetListConfigOptions(int x, int y, int width, int height,
-                                           int configWidth, float zLevel,
-                                           boolean useKeybindSearch, GuiConfigsBase parent) {
+            int configWidth, float zLevel,
+            boolean useKeybindSearch, GuiConfigsBase parent) {
         super(x, y, width, height, configWidth, zLevel, useKeybindSearch, parent);
     }
 
     @Override
-    protected WidgetConfigOption createListEntryWidget(int x, int y, int listIndex, boolean isOdd, ConfigOptionWrapper wrapper) {
+    protected WidgetConfigOption createListEntryWidget(int x, int y, int listIndex, boolean isOdd,
+            ConfigOptionWrapper wrapper) {
         return new BKToolsWidgetConfigOption(
-            x, y, this.browserEntryWidth, this.browserEntryHeight,
-            this.maxLabelWidth, this.configWidth,
-            wrapper, listIndex, this.parent, this);
+                x, y, this.browserEntryWidth, this.browserEntryHeight,
+                this.maxLabelWidth, this.configWidth,
+                wrapper, listIndex, this.parent, this);
     }
 }
