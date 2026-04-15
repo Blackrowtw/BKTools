@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config.widget;
 
 import com.google.gson.JsonElement;
@@ -196,7 +195,7 @@ public class ConfigBtnTrigger extends ConfigBase<ConfigBtnTrigger>
         if (this.getCurrentState() == BtnTriggerState.COOLDOWN) {
             int remaining = this.getRemainingCooldownTicks();
             String tickText = "§7§o(" + remaining + " tick)§r";
-            InfoUtils.printActionbarMessage("bk_tools.message.cooldown_wait", tickText);
+            InfoUtils.printActionbarMessage("bk_tools.message.actionBarMessage.cooldown_wait", tickText);
             return;
         }
         this.lastTriggerTime = System.currentTimeMillis();

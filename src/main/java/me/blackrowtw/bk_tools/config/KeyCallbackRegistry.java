@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config;
 
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
@@ -37,7 +36,6 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import net.minecraft.client.Minecraft;
 
 import me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager;
-import me.blackrowtw.bk_tools.tools.hello.ShowHelloActions;
 import me.blackrowtw.bk_tools.util.DebugLogger;
 
 public class KeyCallbackRegistry {
@@ -53,7 +51,6 @@ public class KeyCallbackRegistry {
         Configs.Generic.OPEN_GUI.getKeybind().setCallback(new OpenGuiCallback());
         Configs.Generic.FORCE_DEBUG_MODE.setValueChangeCallback(new ForceDebugModeChangeCallback());
         Configs.Cn2Tw.CN2TW_ENABLE_FALLBACK.setValueChangeCallback(new Cn2TwEnableCallback());
-        Configs.Test.BKTOOLS_SAY_HELLO.getKeybind().setCallback(new ShowHelloActions.Callback());
     }
 
     // ── GUI 開啟 callback ─────────────────────────────────

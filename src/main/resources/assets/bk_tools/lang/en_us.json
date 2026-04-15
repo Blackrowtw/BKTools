@@ -5,20 +5,17 @@
   "bk_tools.gui.tab.commandBind": "CMB",
   "bk_tools.gui.tab.test": "TEST",
 
+  "bk_tools.message.actionBarMessage.cooldown_wait": "§cPlease wait, do not trigger repeatedly. %s",
+
   "bk_tools.config.generic.name.openGuiConfigs": "Open Config GUI",
   "bk_tools.config.generic.comment.openGuiConfigs": "Hotkey to open the BKTools config screen",
 
   "bk_tools.config.generic.name.force_debug_mode": "Force Debug Mode",
   "bk_tools.config.generic.comment.force_debug_mode": "Enable debug mode manually. Shows TEST tab and detailed logs. Saved to config.",
 
-  "bk_tools.message.cooldown_wait": "§cPlease wait, do not trigger repeatedly. %s",
-
-  "bk_tools.config.test.name.bktools_say_hello": "Hello World",
-  "bk_tools.config.test.comment.bktools_say_hello": "Press to show 'Hello World! BKTools is working!' message",
-
-  "bk_tools.config.test.name.test_hello_button": "Execute Hello",
-  "bk_tools.config.test.comment.test_hello_button": "Click to trigger the Hello World test action",
-  "bk_tools.config.btnTrigger.hello": "Hello",
+  "bk_tools.config.test.name.bktools_say_hello_button": "Hello World",
+  "bk_tools.config.test.comment.bktools_say_hello_button": "Press to show 'Hello World! BKTools is working!' message\nAlso can execute by the malilib custom command: §c/bk hello",
+  "bk_tools.config.btnTrigger.hello": "Say Hello",
 
   "bk_tools.config.cn2tw.name.cn2tw_enable_fallback": "Enable ZH-CN Fallback",
   "bk_tools.config.cn2tw.comment.cn2tw_enable_fallback": "When ZH-TW translation is missing, fall back to ZH-CN\nEnabling immediately refreshes the map; disabling clears it\nUse the three buttons below to manage resources manually",
@@ -72,34 +69,22 @@
   "bk_tools.config.commandBind.name.hotkey_9": "Hotkey 9",
   "bk_tools.config.commandBind.comment.hotkey_9": "Hotkey to execute Command 9",
 
-  "bk_tools.config.loopMode.sequential": "Sequential",
-  "bk_tools.config.loopMode.random": "Random",
-  "bk_tools.config.loopMode.fixed": "Fixed",
+  "bk_tools.button.loopMode.fixed": "Fixed",
+  "bk_tools.button.loopMode.sequential": "Sequential",
+  "bk_tools.button.loopMode.random": "Random",
 
   "bk_tools.config.commandBindList.name.list_1": "Command List 1",
   "bk_tools.config.commandBindList.comment.list_1": "Command list to execute in sequence or random order",
-  "bk_tools.config.commandBindListMode.name.list_1_mode": "Loop Mode 1",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode": "Loop mode and mode-switch hotkey",
-  "bk_tools.config.commandBindListMode.name.list_1_mode_loopMode": "Loop Mode",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode_loopMode": "Loop mode for the command list",
-  "bk_tools.config.commandBindListMode.name.list_1_mode_modeHotkey": "Mode Switch Hotkey",
-  "bk_tools.config.commandBindListMode.comment.list_1_mode_modeHotkey": "Hotkey to cycle through loop modes",
+  "bk_tools.config.commandBindList.name.list_1_mode": "List Loop Mode 1",
+  "bk_tools.config.commandBindList.comment.list_1_mode": "Hotkey to cycle through loop modes: Fixed → Sequential → Random",
 
   "bk_tools.config.commandBindList.name.list_2": "Command List 2",
   "bk_tools.config.commandBindList.comment.list_2": "Command list to execute in sequence or random order",
-  "bk_tools.config.commandBindListMode.name.list_2_mode": "Loop Mode 2",
-  "bk_tools.config.commandBindListMode.comment.list_2_mode": "Loop mode and mode-switch hotkey",
-  "bk_tools.config.commandBindListMode.name.list_2_mode_loopMode": "Loop Mode",
-  "bk_tools.config.commandBindListMode.comment.list_2_mode_loopMode": "Loop mode for the command list",
-  "bk_tools.config.commandBindListMode.name.list_2_mode_modeHotkey": "Mode Switch Hotkey",
-  "bk_tools.config.commandBindListMode.comment.list_2_mode_modeHotkey": "Hotkey to cycle through loop modes",
+  "bk_tools.config.commandBindList.name.list_2_mode": "List Loop Mode 2",
+  "bk_tools.config.commandBindList.comment.list_2_mode": "Hotkey to cycle through loop modes: Fixed → Sequential",
 
   "bk_tools.config.commandBindList.name.list_3": "Command List 3",
   "bk_tools.config.commandBindList.comment.list_3": "Command list to execute in sequence or random order",
-  "bk_tools.config.commandBindListMode.name.list_3_mode": "Loop Mode 3",
-  "bk_tools.config.commandBindListMode.comment.list_3_mode": "Loop mode and mode-switch hotkey",
-  "bk_tools.config.commandBindListMode.name.list_3_mode_loopMode": "Loop Mode",
-  "bk_tools.config.commandBindListMode.comment.list_3_mode_loopMode": "Loop mode for the command list",
-  "bk_tools.config.commandBindListMode.name.list_3_mode_modeHotkey": "Mode Switch Hotkey",
-  "bk_tools.config.commandBindListMode.comment.list_3_mode_modeHotkey": "Hotkey to cycle through loop modes"
+  "bk_tools.config.commandBindList.name.list_3_mode": "List Loop Mode 3",
+  "bk_tools.config.commandBindList.comment.list_3_mode": "Hotkey to cycle through loop modes: Fixed → Sequential → Random"
 }

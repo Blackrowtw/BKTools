@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 // 使用者的圖形設定介面
 package me.blackrowtw.bk_tools.config;
 
@@ -108,7 +107,7 @@ public class GuiConfigs extends GuiConfigsBase {
                 List<IConfigBase> all = new ArrayList<>();
                 all.addAll(Configs.Generic.OPTIONS);
                 all.addAll(Configs.CommandBind.OPTIONS);
-                all.addAll(Configs.CommandBindLoop.OPTIONS);
+                all.addAll(Configs.commandBindList.OPTIONS);
                 // all.addAll(Configs.Cn2Tw.OPTIONS);
                 // 未來新增：all.addAll(_New_.OPTIONS);
                 yield ConfigOptionWrapper.createFor(all);
@@ -116,11 +115,11 @@ public class GuiConfigs extends GuiConfigsBase {
             case COMMAND_BIND -> {
                 List<IConfigBase> cmb = new ArrayList<>();
                 cmb.addAll(Configs.CommandBind.OPTIONS);
-                cmb.addAll(Configs.CommandBindLoop.OPTIONS);
+                cmb.addAll(Configs.commandBindList.OPTIONS);
                 yield ConfigOptionWrapper.createFor(cmb);
             }
-            // case COMMAND_BIND_LOOP ->
-            // ConfigOptionWrapper.createFor(Configs.CommandBindLoop.OPTIONS);
+            // case COMMAND_BIND_LIST ->
+            // ConfigOptionWrapper.createFor(Configs.commandBindList.OPTIONS);
             // case CN2TW -> ConfigOptionWrapper.createFor(Configs.Cn2Tw.OPTIONS);
             // case TEST -> ConfigOptionWrapper.createFor(Configs.Test.HOTKEYS);
             case TEST -> {

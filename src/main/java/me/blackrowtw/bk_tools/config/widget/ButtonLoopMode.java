@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config.widget;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
@@ -34,16 +33,16 @@ import fi.dy.masa.malilib.util.StringUtils;
  * 命令清單循環模式
  * 用於 ConfigCommandBindList 的執行行為切換
  */
-public enum LoopMode implements IConfigOptionListEntry {
+public enum ButtonLoopMode implements IConfigOptionListEntry {
 
-    SEQUENTIAL("sequential", "bk_tools.config.loopMode.sequential"),
-    RANDOM("random", "bk_tools.config.loopMode.random"),
-    FIXED("fixed", "bk_tools.config.loopMode.fixed");
+    SEQUENTIAL("sequential", "bk_tools.button.loopMode.sequential"),
+    RANDOM("random", "bk_tools.button.loopMode.random"),
+    FIXED("fixed", "bk_tools.button.loopMode.fixed");
 
     private final String stringValue;
     private final String translationKey;
 
-    LoopMode(String stringValue, String translationKey) {
+    ButtonLoopMode(String stringValue, String translationKey) {
         this.stringValue = stringValue;
         this.translationKey = translationKey;
     }
@@ -60,14 +59,14 @@ public enum LoopMode implements IConfigOptionListEntry {
 
     @Override
     public IConfigOptionListEntry cycle(boolean forward) {
-        LoopMode[] values = values();
+        ButtonLoopMode[] values = values();
         int next = forward ? (this.ordinal() + 1) : (this.ordinal() - 1 + values.length);
         return values[next % values.length];
     }
 
     @Override
     public IConfigOptionListEntry fromString(String value) {
-        for (LoopMode mode : values()) {
+        for (ButtonLoopMode mode : values()) {
             if (mode.stringValue.equals(value)) {
                 return mode;
             }

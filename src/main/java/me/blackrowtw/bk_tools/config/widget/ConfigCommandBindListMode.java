@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config.widget;
 
 import com.google.gson.JsonElement;
@@ -62,11 +61,11 @@ public class ConfigCommandBindListMode extends ConfigBase<ConfigCommandBindListM
      * @param comment       註解文字
      */
     public ConfigCommandBindListMode(String name, ConfigCommandBindList parent,
-            LoopMode defaultMode, String defaultHotkey, String comment) {
+            ButtonLoopMode defaultMode, String defaultHotkey, String comment) {
         super(ConfigType.HOTKEY, name, comment);
         this.parent = parent;
-        this.loopMode = new ConfigOptionList(name + "_loopMode", defaultMode, comment);
-        this.modeHotkey = new ConfigHotkey(name + "_modeHotkey", defaultHotkey, KeybindSettings.PRESS_ALLOWEXTRA);
+        this.loopMode = new ConfigOptionList(name, defaultMode, comment);
+        this.modeHotkey = new ConfigHotkey(name + "_hotkey", defaultHotkey, KeybindSettings.PRESS_ALLOWEXTRA);
 
         // 設定模式切換快捷鍵回調：按下後循環切換模式
         this.modeHotkey.getKeybind().setCallback((action, key) -> {
@@ -81,8 +80,8 @@ public class ConfigCommandBindListMode extends ConfigBase<ConfigCommandBindListM
      * 循環切換模式：Sequential → Random → Fixed → Sequential...
      */
     private void cycleMode() {
-        LoopMode current = (LoopMode) this.loopMode.getOptionListValue();
-        LoopMode next = (LoopMode) current.cycle(true);
+        ButtonLoopMode current = (ButtonLoopMode) this.loopMode.getOptionListValue();
+        ButtonLoopMode next = (ButtonLoopMode) current.cycle(true);
         this.loopMode.setOptionListValue(next);
     }
 
@@ -207,6 +206,6 @@ public class ConfigCommandBindListMode extends ConfigBase<ConfigCommandBindListM
     @Override
     public String getConfigGuiDisplayName() {
         return fi.dy.masa.malilib.util.StringUtils.translate(
-                "bk_tools.config.commandBindListMode.name." + this.getName());
+                "bk_tools.config.commandBindList.name." + this.getName());
     }
 }

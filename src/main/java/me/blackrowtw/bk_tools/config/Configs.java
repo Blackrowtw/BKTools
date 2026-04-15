@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 // 設定的各項目定義，按功能分組
 package me.blackrowtw.bk_tools.config;
 
@@ -50,7 +49,7 @@ import me.blackrowtw.bk_tools.config.widget.ConfigBtnTrigger;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBind;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindList;
 import me.blackrowtw.bk_tools.config.widget.ConfigCommandBindListMode;
-import me.blackrowtw.bk_tools.config.widget.LoopMode;
+import me.blackrowtw.bk_tools.config.widget.ButtonLoopMode;
 import me.blackrowtw.bk_tools.tools.hello.ShowHelloActions;
 
 public class Configs implements IConfigHandler {
@@ -59,7 +58,7 @@ public class Configs implements IConfigHandler {
         private static final String KEY_GENERIC = Reference.MOD_ID + ".config.generic";
         private static final String KEY_CN2TW = Reference.MOD_ID + ".config.cn2tw";
         private static final String KEY_COMMAND_BIND = Reference.MOD_ID + ".config.commandBind";
-        private static final String KEY_COMMAND_BIND_LOOP = Reference.MOD_ID + ".config.commandBindLoop";
+        private static final String KEY_COMMAND_BIND_LIST = Reference.MOD_ID + ".config.commandBindList";
         private static final String KEY_TEST = Reference.MOD_ID + ".config.test";
 
         // ── Generic：框架層快捷鍵 ────────────────────────────────
@@ -84,46 +83,133 @@ public class Configs implements IConfigHandler {
         public static class CommandBind {
 
                 public static final ConfigCommandBind COMMAND_BIND_1 = new ConfigCommandBind(
-                                1, "/me =⩌⩊⩌= < no.1", "", "Command to execute (start with / for commands)")
+                                1, "/bk hello", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_2 = new ConfigCommandBind(
-                                2, "/me =⩌⩊⩌= < no.2", "", "Command to execute (start with / for commands)")
+                                2, "/gamemode survival", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_3 = new ConfigCommandBind(
-                                3, "/me =⩌⩊⩌= < no.3", "", "Command to execute (start with / for commands)")
+                                3, "/gamemode creative", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_4 = new ConfigCommandBind(
-                                4, "/me =⩌⩊⩌= < no.4", "", "Command to execute (start with / for commands)")
+                                4, "/gamemode spectator", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_5 = new ConfigCommandBind(
-                                5, "/me =⩌⩊⩌= < no.5", "", "Command to execute (start with / for commands)")
+                                5, "/time set day", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_6 = new ConfigCommandBind(
-                                6, "/me =⩌⩊⩌= < no.6", "", "Command to execute (start with / for commands)")
+                                6, "/time set midnight", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_7 = new ConfigCommandBind(
-                                7, "/me =⩌⩊⩌= < no.7", "", "Command to execute (start with / for commands)")
+                                7, "/weather clear 7200s", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_8 = new ConfigCommandBind(
-                                8, "/me =⩌⩊⩌= < no.8", "", "Command to execute (start with / for commands)")
+                                8, "/tick step 1", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
                 public static final ConfigCommandBind COMMAND_BIND_9 = new ConfigCommandBind(
-                                9, "/me =⩌⩊⩌= < no.9", "", "Command to execute (start with / for commands)")
+                                9, "/tick step 2", "", "")
                                 .apply(KEY_COMMAND_BIND);
 
-                // OPTIONS 供 GuiConfigs 顯示（每組只佔一行）
+                // OPTIONS 供 GuiConfigs 顯示
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
                                 COMMAND_BIND_1, COMMAND_BIND_2, COMMAND_BIND_3,
                                 COMMAND_BIND_4, COMMAND_BIND_5, COMMAND_BIND_6,
                                 COMMAND_BIND_7, COMMAND_BIND_8, COMMAND_BIND_9);
+        }
+
+        // ── commandBindList：命令清單循環功能 ─────────────────────
+        public static class commandBindList {
+
+                /**
+                 * 命令清單綁定（List 1）：命令清單 + 執行快捷鍵
+                 */
+                public static final ConfigCommandBindList COMMAND_BIND_LIST_1 = new ConfigCommandBindList(
+                                "list_1",
+                                java.util.List.of("/tick freeze",
+                                                "/tick unfreeze"),
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                /**
+                 * 命令清單模式切換（List 1 Mode）：循環模式 + 模式切換快捷鍵
+                 */
+                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_1_MODE = new ConfigCommandBindListMode(
+                                "list_1_mode",
+                                COMMAND_BIND_LIST_1,
+                                ButtonLoopMode.SEQUENTIAL,
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                /**
+                 * 命令清單綁定（List 2）：命令清單 + 執行快捷鍵
+                 */
+                public static final ConfigCommandBindList COMMAND_BIND_LIST_2 = new ConfigCommandBindList(
+                                "list_2",
+                                java.util.List.of("/me =⩌⩊⩌= < CMB List #2 - Fix mode"),
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                /**
+                 * 命令清單模式切換（List 2 Mode）：循環模式 + 模式切換快捷鍵
+                 */
+                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_2_MODE = new ConfigCommandBindListMode(
+                                "list_2_mode",
+                                COMMAND_BIND_LIST_2,
+                                ButtonLoopMode.FIXED,
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                /**
+                 * 命令清單綁定（List 3）：命令清單 + 執行快捷鍵
+                 */
+                public static final ConfigCommandBindList COMMAND_BIND_LIST_3 = new ConfigCommandBindList(
+                                "list_3",
+                                java.util.List.of("/me =⩌⩊⩌= < ⚀",
+                                                "/me =⩌⩊⩌= < ⚁",
+                                                "/me =⩌⩊⩌= < ⚂",
+                                                "/me =⩌⩊⩌= < ⚃",
+                                                "/me =⩌⩊⩌= < ⚄",
+                                                "/me =⩌⩊⩌= < ⚅"),
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                /**
+                 * 命令清單模式切換（List 3 Mode）：循環模式 + 模式切換快捷鍵
+                 */
+                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_3_MODE = new ConfigCommandBindListMode(
+                                "list_3_mode",
+                                COMMAND_BIND_LIST_3,
+                                ButtonLoopMode.RANDOM,
+                                "",
+                                "")
+                                .apply(KEY_COMMAND_BIND_LIST);
+
+                static {
+                        COMMAND_BIND_LIST_1.setModeConfig(COMMAND_BIND_LIST_1_MODE);
+                        COMMAND_BIND_LIST_2.setModeConfig(COMMAND_BIND_LIST_2_MODE);
+                        COMMAND_BIND_LIST_3.setModeConfig(COMMAND_BIND_LIST_3_MODE);
+                }
+
+                public static final List<IConfigBase> OPTIONS = ImmutableList.of(
+                                COMMAND_BIND_LIST_1,
+                                COMMAND_BIND_LIST_1_MODE,
+                                COMMAND_BIND_LIST_2,
+                                COMMAND_BIND_LIST_2_MODE,
+                                COMMAND_BIND_LIST_3,
+                                COMMAND_BIND_LIST_3_MODE);
         }
 
         // ── Cn2Tw：簡繁 fallback 功能 ────────────────────────────
@@ -146,7 +232,7 @@ public class Configs implements IConfigHandler {
                  */
                 public static final ConfigBtnTrigger CN2TW_REFRESH_MAP = new ConfigBtnTrigger(
                                 "cn2tw_refresh_map",
-                                "Refresh the fallback map from current language files (async, no file output)",
+                                "",
                                 () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
                                                 .refreshMap(),
                                 "bk_tools.config.btnTrigger.cn2tw_refresh_map",
@@ -160,7 +246,7 @@ public class Configs implements IConfigHandler {
                  */
                 public static final ConfigBtnTrigger CN2TW_DUMP_LANG_FILE = new ConfigBtnTrigger(
                                 "cn2tw_dump_lang_file",
-                                "Refresh map then write to config/BKTools_DEBUG/cn2tw_fallback_dump.json",
+                                "",
                                 () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
                                                 .dumpLangFile(),
                                 "bk_tools.config.btnTrigger.cn2tw_dump_lang_file",
@@ -174,7 +260,7 @@ public class Configs implements IConfigHandler {
                  */
                 public static final ConfigBtnTrigger CN2TW_RELOAD_RESOURCES = new ConfigBtnTrigger(
                                 "cn2tw_reload_resources",
-                                "Reload all resource packs (equivalent to F3+T), CN2TW auto-updates after",
+                                "",
                                 () -> me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager.getInstance()
                                                 .reloadResources(),
                                 "bk_tools.config.btnTrigger.cn2tw_reload_resources",
@@ -190,118 +276,29 @@ public class Configs implements IConfigHandler {
 
         // ── Test：測試功能 ────────────────────────────────────────
         public static class Test {
-                public static final ConfigHotkey BKTOOLS_SAY_HELLO = new ConfigHotkey(
-                                "bktools_say_hello", "B,H", KeybindSettings.PRESS_ALLOWEXTRA)
-                                .apply(KEY_TEST);
+                // public static final ConfigHotkey BKTOOLS_SAY_HELLO = new ConfigHotkey(
+                // "bktools_say_hello", "B,H", KeybindSettings.PRESS_ALLOWEXTRA)
+                // .apply(KEY_TEST);
 
                 /**
                  * 觸發式按鈕：點擊後執行 Hello World 測試功能
                  * 不需要綁定快捷鍵，直接在 GUI 中點擊
                  * 預設 20 ticks 冷卻
                  */
-                public static final ConfigBtnTrigger TEST_HELLO_BUTTON = new ConfigBtnTrigger(
-                                "test_hello_button",
-                                "Click to trigger the Hello World test action",
+                public static final ConfigBtnTrigger BKTOOLS_SAY_HELLO_BUTTON = new ConfigBtnTrigger(
+                                "bktools_say_hello_button",
+                                "",
                                 ShowHelloActions::executeHello,
                                 "bk_tools.config.btnTrigger.hello").apply(KEY_TEST);
 
                 public static final List<IConfigBase> OPTIONS = ImmutableList.of(
-                                BKTOOLS_SAY_HELLO,
-                                TEST_HELLO_BUTTON);
-        }
-
-        // ── CommandBindLoop：命令清單循環功能 ─────────────────────
-        public static class CommandBindLoop {
-
-                /**
-                 * 命令清單綁定（List 1）：命令清單 + 執行快捷鍵
-                 */
-                public static final ConfigCommandBindList COMMAND_BIND_LIST_1 = new ConfigCommandBindList(
-                                "list_1",
-                                java.util.List.of("/me =⩌⩊⩌= < CMB List #1 - Fix mode"),
-                                "",
-                                "Command list to execute in sequence or random order")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                /**
-                 * 命令清單模式切換（List 1 Mode）：循環模式 + 模式切換快捷鍵
-                 */
-                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_1_MODE = new ConfigCommandBindListMode(
-                                "list_1_mode",
-                                COMMAND_BIND_LIST_1,
-                                LoopMode.FIXED,
-                                "",
-                                "Loop mode and mode-switch hotkey")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                /**
-                 * 命令清單綁定（List 2）：命令清單 + 執行快捷鍵
-                 */
-                public static final ConfigCommandBindList COMMAND_BIND_LIST_2 = new ConfigCommandBindList(
-                                "list_2",
-                                java.util.List.of("/me =⩌⩊⩌= < CMB List #2 - Sequential mode 1",
-                                                "/me =⩌⩊⩌= < CMB List #2 - Sequential mode 2",
-                                                "/me =⩌⩊⩌= < CMB List #2 - Sequential mode 3"),
-                                "",
-                                "Command list to execute in sequence or random order")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                /**
-                 * 命令清單模式切換（List 2 Mode）：循環模式 + 模式切換快捷鍵
-                 */
-                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_2_MODE = new ConfigCommandBindListMode(
-                                "list_2_mode",
-                                COMMAND_BIND_LIST_2,
-                                LoopMode.SEQUENTIAL,
-                                "",
-                                "Loop mode and mode-switch hotkey")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                /**
-                 * 命令清單綁定（List 3）：命令清單 + 執行快捷鍵
-                 */
-                public static final ConfigCommandBindList COMMAND_BIND_LIST_3 = new ConfigCommandBindList(
-                                "list_3",
-                                java.util.List.of("/me =⩌⩊⩌= < ⚀",
-                                                "/me =⩌⩊⩌= < ⚁",
-                                                "/me =⩌⩊⩌= < ⚂",
-                                                "/me =⩌⩊⩌= < ⚃",
-                                                "/me =⩌⩊⩌= < ⚄",
-                                                "/me =⩌⩊⩌= < ⚅"),
-                                "",
-                                "Command list to execute in sequence or random order")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                /**
-                 * 命令清單模式切換（List 3 Mode）：循環模式 + 模式切換快捷鍵
-                 */
-                public static final ConfigCommandBindListMode COMMAND_BIND_LIST_3_MODE = new ConfigCommandBindListMode(
-                                "list_3_mode",
-                                COMMAND_BIND_LIST_3,
-                                LoopMode.RANDOM,
-                                "",
-                                "Loop mode and mode-switch hotkey")
-                                .apply(KEY_COMMAND_BIND_LOOP);
-
-                static {
-                        COMMAND_BIND_LIST_1.setModeConfig(COMMAND_BIND_LIST_1_MODE);
-                        COMMAND_BIND_LIST_2.setModeConfig(COMMAND_BIND_LIST_2_MODE);
-                        COMMAND_BIND_LIST_3.setModeConfig(COMMAND_BIND_LIST_3_MODE);
-                }
-
-                public static final List<IConfigBase> OPTIONS = ImmutableList.of(
-                                COMMAND_BIND_LIST_1,
-                                COMMAND_BIND_LIST_1_MODE,
-                                COMMAND_BIND_LIST_2,
-                                COMMAND_BIND_LIST_2_MODE,
-                                COMMAND_BIND_LIST_3,
-                                COMMAND_BIND_LIST_3_MODE);
+                                BKTOOLS_SAY_HELLO_BUTTON);
         }
 
         // ── 設定檔讀寫 ────────────────────────────────────────────
         private static final Path CONFIG_PATH = Reference.CONFIG_DIR.resolve(Reference.MOD_ID + ".json");
 
-        // ── 聚合清單（供 InputHandler 使用）────────────────────────
+        // ── 快捷鍵匯總清單（供 InputHandler 使用）────────────────────────
         public static final List<IHotkey> ALL_HOTKEYS;
 
         static {
@@ -312,7 +309,7 @@ public class Configs implements IConfigHandler {
                                 Generic.OPTIONS,
                                 Cn2Tw.OPTIONS,
                                 CommandBind.OPTIONS,
-                                CommandBindLoop.OPTIONS,
+                                commandBindList.OPTIONS,
                                 Test.OPTIONS
                 // 未來新增：_New_.OPTIONS
                 ).flatMap(List::stream)
@@ -332,7 +329,7 @@ public class Configs implements IConfigHandler {
                         ConfigUtils.readConfigBase(root, "cn2tw", Cn2Tw.OPTIONS);
                         ConfigUtils.readConfigBase(root, "test", Test.OPTIONS);
                         ConfigUtils.readConfigBase(root, "commandBind", CommandBind.OPTIONS);
-                        ConfigUtils.readConfigBase(root, "commandBindLoop", CommandBindLoop.OPTIONS);
+                        ConfigUtils.readConfigBase(root, "commandBindList", commandBindList.OPTIONS);
                         // 未來新增：ConfigUtils.readXxxx(root, "_new_", _New_.OPTIONS);
                 }
         }
@@ -344,7 +341,7 @@ public class Configs implements IConfigHandler {
                 ConfigUtils.writeConfigBase(root, "cn2tw", Cn2Tw.OPTIONS);
                 ConfigUtils.writeConfigBase(root, "test", Test.OPTIONS);
                 ConfigUtils.writeConfigBase(root, "commandBind", CommandBind.OPTIONS);
-                ConfigUtils.writeConfigBase(root, "commandBindLoop", CommandBindLoop.OPTIONS);
+                ConfigUtils.writeConfigBase(root, "commandBindList", commandBindList.OPTIONS);
                 // 未來新增：ConfigUtils.writeXxxx(root, "_new_", _New_.OPTIONS);
                 JsonUtils.writeJsonToFile(root, CONFIG_PATH.toFile());
         }

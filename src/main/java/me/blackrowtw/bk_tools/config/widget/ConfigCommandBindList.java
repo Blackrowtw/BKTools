@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.config.widget;
 
 import java.util.List;
@@ -66,13 +65,13 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
      *
      * @param name            Config 名稱
      * @param defaultCommands 預設命令清單
-     * @param defaultHotkey   預設快捷鍵字串（如 "B,H"）
+     * @param defaultHotkey   預設快捷鍵字串
      * @param comment         註解文字
      */
     public ConfigCommandBindList(String name, List<String> defaultCommands, String defaultHotkey, String comment) {
         super(ConfigType.HOTKEY, name, comment);
         this.commands = new ConfigStringList(
-                name + "_commands",
+                name,
                 com.google.common.collect.ImmutableList.copyOf(defaultCommands),
                 comment);
         this.hotkey = new ConfigHotkey(name + "_hotkey", defaultHotkey, KeybindSettings.PRESS_ALLOWEXTRA);
@@ -115,7 +114,7 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
             this.currentIndex = 0;
         }
 
-        LoopMode mode = (LoopMode) this.modeConfig.getLoopModeConfig().getOptionListValue();
+        ButtonLoopMode mode = (ButtonLoopMode) this.modeConfig.getLoopModeConfig().getOptionListValue();
 
         String cmd;
         switch (mode) {
