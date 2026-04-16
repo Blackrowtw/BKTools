@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.mixins;
 
 import me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager;
@@ -35,37 +34,57 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * 攔截 ClientLanguage.getOrDefault()
+ * CN2TW 翻譯補充 Mixin — 攔截 ClientLanguage.getOrDefault()
  *
- * 當繁體中文（zh_tw）找不到翻譯時（回傳值 == key），
- * 從 Cn2TwFallbackManager 補充對應的 zh_cn 翻譯
+ * 攔截時機與判斷邏輯：
  *
- * 判斷「真正找不到」的條件：
- * 回傳值與 key 相同 → Minecraft 找不到翻譯，回傳 key 本身作為 fallback
+ * ClientLanguage.loadFrom() 同時載入 en_us（底層）和 zh_tw（覆蓋層），
+ * storage 中已包含所有 en_us key 作為 zh_tw 的 fallback。
  *
- * 不用與 fallback 參數比較的原因：
- * fallback 參數本身就是 key，但 Mojang 未來可能改變此行為
- * 直接比較 cir.getReturnValue() 與 key 更穩定可靠
+ * 三種情況，我們只替換後兩種：
+ *   ① zh_tw 有翻譯   → key 不在 fallbackMap → manager.contains() 短路，不干涉
+ *   ② zh_tw 無、en_us 有 → 回傳英文；isEnUsFallback() 確認後替換為 zh_cn
+ *   ③ zh_tw 和 en_us 都沒有 → 回傳 key 本身；returnValue.equals(key) 確認後替換為 zh_cn
+ *
+ * carpet 兼容說明：
+ *   carpet 系模組部分翻譯 key 查詢時，回傳的值可能包含 Minecraft 的格式化字符
+ *   或 carpet 自己的 Component 可能先調用過處理，導致 isEnUsFallback 比對失敗。
+ *   目前的判斷是「回傳值與 en_us 完全相等」，carpet 如果對翻譯有額外處理就比對不到。
+ *   待進一步確認 carpet 的具體行為後，可在此處加入 carpet 專用的兼容邏輯。
+ *
+ * masa 系說明：
+ *   masa 系（litematica 等）若有 zh_cn 但無 zh_tw，在 dump 中會存在且可被替換。
+ *   若 dump 中找不到其 key，表示這些模組的 zh_tw.json 已存在（例如 malilib 本身），
+ *   即這些 key 不在 fallbackMap 中，Mixin 正確跳過，無需干涉。
  */
 @Mixin(ClientLanguage.class)
 public class ClientLanguageMixin {
 
     @Inject(method = "getOrDefault", at = @At("RETURN"), cancellable = true)
     private void onGetOrDefault(String key, String fallback, CallbackInfoReturnable<String> cir) {
-
-        // 快速短路：回傳值不等於 key，表示 zh_tw 已有翻譯，不需 fallback
-        if (!cir.getReturnValue().equals(key))
-            return;
-
         Cn2TwFallbackManager manager = Cn2TwFallbackManager.getInstance();
 
-        // 快速短路：功能未開啟，直接返回
-        if (!manager.isEnabled())
-            return;
+        // 快速短路 1：功能未開啟
+        if (!manager.isEnabled()) return;
 
-        // 有 fallback 翻譯才替換
-        if (manager.contains(key)) {
+        // 快速短路 2：此 key 不在 fallbackMap（zh_tw 已有翻譯，或 zh_cn 也沒有此 key）
+        // 這是最常見的情況，O(1) 查詢，幾乎無效能影響
+        if (!manager.contains(key)) return;
+
+        final String returnValue = cir.getReturnValue();
+
+        // 情況 ③：zh_tw 和 en_us 都沒有此 key，Minecraft 回傳 key 本身
+        if (returnValue.equals(key)) {
+            cir.setReturnValue(manager.get(key));
+            return;
+        }
+
+        // 情況 ②：zh_tw 沒有，en_us 有，Minecraft 回傳 en_us 英文翻譯
+        // isEnUsFallback() 透過比對 enUsSnapshot 確認回傳值確實來自 en_us
+        if (manager.isEnUsFallback(key, returnValue)) {
             cir.setReturnValue(manager.get(key));
         }
+
+        // 未匹配以上兩種情況：不干涉（可能是 zh_tw 確實有翻譯，或其他特殊情況）
     }
 }

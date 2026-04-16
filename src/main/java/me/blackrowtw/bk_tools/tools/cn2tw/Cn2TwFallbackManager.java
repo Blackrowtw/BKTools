@@ -24,7 +24,6 @@
  * along with BKTools.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package me.blackrowtw.bk_tools.tools.cn2tw;
 
 import net.minecraft.ChatFormatting;
@@ -48,6 +47,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import me.blackrowtw.bk_tools.Reference;
 import me.blackrowtw.bk_tools.config.Configs;
@@ -57,17 +57,30 @@ import me.blackrowtw.bk_tools.util.SendChatMessage;
 /**
  * CN2TW Fallback 管理器（單例）
  *
- * 職責：
- * 1. 在資源重載（F3+T / 進世界）時，背景執行緒 prepare，主執行緒 apply
- * 2. 開關切換時即時生效（開→補充 map，關→清空 map）
- * 3. 提供 GUI 按鈕觸發的非同步刷新（不阻塞主執行緒）
- * 4. 提供非同步重載資源的接口（等同 F3+T）
- * 5. dumpLangFile 以非同步方式在背景執行緒完成 I/O
+ * 翻譯覆蓋範圍：
+ * zh_tw 有 → 不干涉
+ * zh_tw 沒有、en_us 有（英文 fallback）→ 替換為 zh_cn
+ * zh_tw 和 en_us 都沒有（顯示 key）→ 替換為 zh_cn
  *
- * 語言對擴充接口：
- * - 目前固定 zh_cn → zh_tw
- * - loadLanguageFile() 是公開方法，未來可供其他語言對模組複用
- * - prepare() 的 sourceLang / targetLang 參數化後可支援 en2tw、en2cn 等
+ * 執行緒安全修正（崩潰修正）：
+ * refreshAsync() 在呼叫時快照 ResourceManager 引用
+ * prepare() 使用快照引用，不在背景執行緒中呼叫 Minecraft.getInstance()
+ * F3+T 期間 Minecraft 的 ResourceManager 正在被替換，
+ * 直接從 Minecraft 取得引用會拿到替換中的物件 → 崩潰
+ *
+ * masa 系模組兼容說明：
+ * masa 系（litematica, tweakeroo 等）將語言資源打包在 assets/<modid>/lang/ 下
+ * 這與標準模組相同，listResources("lang",...) 能正確找到
+ * 如果 dump 中看不到 masa 系翻譯，原因是：
+ * 1. 這些模組的 zh_tw.json 已存在（malilib 自身有完整 zh_tw）
+ * 2. 或 jar 載入順序問題（較少見）
+ *
+ * carpet 系模組兼容說明：
+ * carpet 的部分 GUI 文字透過 carpet 自己的 Component 系統顯示
+ * 這些文字最終仍會呼叫 ClientLanguage.getOrDefault()
+ * 若 carpet 的 zh_cn 翻譯在 dump 中存在但 Mixin 無法替換，
+ * 最可能的原因是 carpet 對應的 en_us key 的翻譯值和原本顯示的不完全一致
+ * 解決方式：放寬 isEnUsFallback 的判斷（見 Mixin 說明）
  */
 public class Cn2TwFallbackManager {
 
@@ -85,94 +98,115 @@ public class Cn2TwFallbackManager {
     private Cn2TwFallbackManager() {
     }
 
-    // ── 語言對（未來擴展為可設定的 Config 選項）──────────
+    // ── 語言對常數 ────────────────────────────────────────
     private static final String SOURCE_LANG = "zh_cn";
     private static final String TARGET_LANG = "zh_tw";
+    private static final String FALLBACK_LANG = "en_us";
 
-    // ── fallback 結果存放處（執行緒安全）──────────────────
-    // key = translation key（例如 "some_mod.item.foo"）
-    // value = 來源語言的翻譯文字（zh_cn 原文，未來可接 OPENCC 轉換）
+    // ── fallbackMap：zh_cn 有但 zh_tw 沒有的翻譯 ──────────
     private final ConcurrentHashMap<String, String> fallbackMap = new ConcurrentHashMap<>();
 
-    // ── 非同步刷新進行中旗標（避免重複觸發）──────────────
+    // ── enUsSnapshot：en_us 完整翻譯（用於判斷 en_us fallback）──
+    private final AtomicReference<Map<String, String>> enUsSnapshot = new AtomicReference<>(Collections.emptyMap());
+
+    // ── 非同步刷新旗標 ────────────────────────────────────
     private final AtomicBoolean refreshPending = new AtomicBoolean(false);
 
     // ══════════════════════════════════════════════════════
-    // 公開查詢 API（供 ClientLanguageMixin 呼叫，主執行緒安全）
+    // 公開查詢 API
     // ══════════════════════════════════════════════════════
 
-    /** 功能是否啟用（直接讀取 Config 開關，每次查詢時動態判斷） */
     public boolean isEnabled() {
         return Configs.Cn2Tw.CN2TW_ENABLE_FALLBACK.getBooleanValue();
     }
 
-    /** 查詢 key 是否存在於 fallback map */
     public boolean contains(String key) {
         return fallbackMap.containsKey(key);
     }
 
-    /** 取得 fallback 翻譯文字 */
     public String get(String key) {
         return fallbackMap.get(key);
     }
 
-    /** 取得目前 fallback 條目數 */
     public int size() {
         return fallbackMap.size();
     }
 
+    /**
+     * 判斷 getOrDefault 的回傳值是否為 en_us fallback
+     *
+     * 目的：讓 Mixin 能攔截「zh_tw 沒有翻譯、顯示 en_us 英文」的情況
+     *
+     * @param key         翻譯 key
+     * @param returnValue ClientLanguage.getOrDefault 的回傳值
+     */
+    public boolean isEnUsFallback(String key, String returnValue) {
+        Map<String, String> enUs = enUsSnapshot.get();
+        if (enUs.isEmpty())
+            return false;
+        String enUsValue = enUs.get(key);
+        return enUsValue != null && enUsValue.equals(returnValue);
+    }
+
     // ══════════════════════════════════════════════════════
-    // 資源重載流程（Cn2TwReloadListener 呼叫，Fabric API 保證執行緒）
+    // 資源重載流程（Cn2TwReloadListener 呼叫）
     // ══════════════════════════════════════════════════════
 
     /**
-     * PREPARE 階段：在 prepareExecutor 背景執行緒執行
-     * 純粹讀取資源，不做任何狀態變更，回傳不可變快照
+     * PREPARE 階段：背景執行緒，純讀取
      *
-     * @param resourceManager 當次重載的 ResourceManager
-     * @return 缺少翻譯的條目快照（source 有、target 沒有）
+     * 使用由 Cn2TwReloadListener 傳入的 store（ResourceManager 快照）
+     * store 是 Fabric 為本次重載建立的穩定引用，不受 F3+T 期間的替換影響
      */
-    public Map<String, String> prepare(ResourceManager resourceManager) {
+    public PreparedData prepare(ResourceManager resourceManager) {
         DebugLogger.info("Cn2TwFallback", "prepare() 開始");
 
-        Map<String, String> sourceAll = loadLanguageFile(resourceManager, SOURCE_LANG);
-        Map<String, String> targetAll = loadLanguageFile(resourceManager, TARGET_LANG);
+        Map<String, String> zhCn = loadLanguageFile(resourceManager, SOURCE_LANG);
+        Map<String, String> zhTw = loadLanguageFile(resourceManager, TARGET_LANG);
+        Map<String, String> enUs = loadLanguageFile(resourceManager, FALLBACK_LANG);
 
-        DebugLogger.info("Cn2TwFallback", "%s %d 條 / %s %d 條",
-                SOURCE_LANG, sourceAll.size(), TARGET_LANG, targetAll.size());
+        DebugLogger.info("Cn2TwFallback", "%s=%d / %s=%d / %s=%d",
+                SOURCE_LANG, zhCn.size(), TARGET_LANG, zhTw.size(), FALLBACK_LANG, enUs.size());
 
-        Map<String, String> result = new HashMap<>();
-        for (Map.Entry<String, String> entry : sourceAll.entrySet()) {
-            if (!targetAll.containsKey(entry.getKey())) {
-                result.put(entry.getKey(), entry.getValue());
-                // 預留接口：這裡可以接 OPENCC 對 entry.getValue() 做繁簡轉換後再放入
+        Map<String, String> fallback = new HashMap<>();
+        for (Map.Entry<String, String> entry : zhCn.entrySet()) {
+            if (!zhTw.containsKey(entry.getKey())) {
+                // 預留接口：在此處加入 OpenCC/opencc4j 繁簡轉換
+                // 例如：String converted = ZhConverter.toTraditional(entry.getValue());
+                // fallback.put(entry.getKey(), converted);
+                fallback.put(entry.getKey(), entry.getValue());
             }
         }
 
-        DebugLogger.info("Cn2TwFallback", "prepare() 完成，待補充 %d 條", result.size());
-        return Collections.unmodifiableMap(result);
+        DebugLogger.info("Cn2TwFallback", "prepare() 完成，待補充 %d 條", fallback.size());
+        return new PreparedData(
+                Collections.unmodifiableMap(fallback),
+                Collections.unmodifiableMap(enUs));
     }
 
-    /**
-     * APPLY 階段：在 applyExecutor（主執行緒）執行
-     * 此時 Config 已 load 完成，開關值正確
-     *
-     * @param preparedData prepare() 產生的資料快照
-     */
-    public void apply(Map<String, String> preparedData) {
+    /** APPLY 階段：主執行緒 */
+    public void apply(PreparedData data) {
         fallbackMap.clear();
+        enUsSnapshot.set(Collections.emptyMap());
 
         if (!isEnabled()) {
             DebugLogger.always("Cn2TwFallback", "功能已關閉，跳過套用");
             return;
         }
 
-        fallbackMap.putAll(preparedData);
+        fallbackMap.putAll(data.fallback());
+        enUsSnapshot.set(data.enUs());
         DebugLogger.always("Cn2TwFallback", "apply() 完成，補充了 %d 條翻譯", fallbackMap.size());
     }
 
+    /** prepare() 的不可變資料容器 */
+    public record PreparedData(
+            Map<String, String> fallback,
+            Map<String, String> enUs) {
+    }
+
     // ══════════════════════════════════════════════════════
-    // 開關切換即時生效（KeyCallbackRegistry → onToggle）
+    // 開關切換即時生效
     // ══════════════════════════════════════════════════════
 
     /**
@@ -187,22 +221,26 @@ public class Cn2TwFallbackManager {
         if (enabled) {
             Minecraft mc = Minecraft.getInstance();
             if (mc != null && mc.getResourceManager() != null) {
-                refreshAsync(mc.getResourceManager(), false);
+                // 在呼叫點快照 ResourceManager，傳給 refreshAsync
+                // 此時不在資源重載中，引用是穩定的
+                final ResourceManager rm = mc.getResourceManager();
+                refreshAsync(rm, false);
             } else {
-                // 極少數情況：遊戲尚未完全初始化
-                DebugLogger.alwaysWarn("Cn2TwFallback", "onToggle(true): ResourceManager 尚未就緒，等資源重載後生效");
+                DebugLogger.alwaysWarn("Cn2TwFallback", "onToggle(true): ResourceManager 尚未就緒");
                 SendChatMessage.of("[BKTools] CN2TW 已開啟，重載資源後生效")
                         .color(ChatFormatting.YELLOW).send();
             }
         } else {
+            // 主執行緒直接清空，ConcurrentHashMap.clear() 是執行緒安全的
             fallbackMap.clear();
+            enUsSnapshot.set(Collections.emptyMap());
             SendChatMessage.of("[BKTools] CN2TW 已關閉").color(ChatFormatting.GRAY).send();
-            DebugLogger.always("Cn2TwFallback", "onToggle(false): fallbackMap 已清空");
+            DebugLogger.always("Cn2TwFallback", "onToggle(false): 資料已清空");
         }
     }
 
     // ══════════════════════════════════════════════════════
-    // GUI 按鈕觸發的三個操作
+    // GUI 按鈕操作
     // ══════════════════════════════════════════════════════
 
     /**
@@ -222,7 +260,9 @@ public class Cn2TwFallbackManager {
                     .color(ChatFormatting.RED).send();
             return;
         }
-        refreshAsync(mc.getResourceManager(), false);
+        // 呼叫點快照
+        final ResourceManager rm = mc.getResourceManager();
+        refreshAsync(rm, false);
     }
 
     /**
@@ -237,30 +277,25 @@ public class Cn2TwFallbackManager {
                     .color(ChatFormatting.RED).send();
             return;
         }
-
         if (!isEnabled()) {
             SendChatMessage.of("[BKTools] CN2TW 功能已關閉，無法輸出 Map")
                     .color(ChatFormatting.YELLOW).send();
             return;
         }
-
-        // 避免重複觸發
         if (!refreshPending.compareAndSet(false, true)) {
             SendChatMessage.of("[BKTools] 正在刷新中，請稍候...")
                     .color(ChatFormatting.YELLOW).send();
             return;
         }
 
+        // 呼叫點快照
         final ResourceManager rm = mc.getResourceManager();
 
-        // Step1: 背景執行緒 prepare
         CompletableFuture.supplyAsync(() -> prepare(rm))
-                // Step2: 主執行緒 apply
-                .thenAcceptAsync(preparedData -> mc.execute(() -> {
+                .thenAcceptAsync(data -> mc.execute(() -> {
                     try {
-                        apply(preparedData);
-                        // Step3: 背景執行緒輸出檔案（帶 apply 後的快照，確保一致）
-                        CompletableFuture.runAsync(() -> writeDumpFile(preparedData))
+                        apply(data);
+                        CompletableFuture.runAsync(() -> writeDumpFile(data.fallback()))
                                 .exceptionally(ex -> {
                                     DebugLogger.alwaysWarn("Cn2TwFallback", "writeDumpFile 失敗: %s", ex.getMessage());
                                     mc.execute(() -> SendChatMessage.of("[BKTools] 輸出失敗：" + ex.getMessage())
@@ -273,7 +308,7 @@ public class Cn2TwFallbackManager {
                 }))
                 .exceptionally(ex -> {
                     refreshPending.set(false);
-                    DebugLogger.alwaysWarn("Cn2TwFallback", "dumpLangFile prepare 失敗: %s", ex.getMessage());
+                    DebugLogger.alwaysWarn("Cn2TwFallback", "dumpLangFile 失敗: %s", ex.getMessage());
                     mc.execute(() -> SendChatMessage.of("[BKTools] 刷新失敗：" + ex.getMessage())
                             .color(ChatFormatting.RED).send());
                     return null;
@@ -291,17 +326,13 @@ public class Cn2TwFallbackManager {
                     .color(ChatFormatting.RED).send();
             return;
         }
-
         SendChatMessage.of("[BKTools] 正在重載資源包，請稍候...")
                 .color(ChatFormatting.YELLOW).send();
         DebugLogger.always("Cn2TwFallback", "reloadResources() 觸發");
-
-        // 使用 Minecraft 原生重載，完成後 Cn2TwReloadListener 自動執行 prepare/apply
         mc.reloadResourcePacks().thenRunAsync(
                 () -> SendChatMessage.of("[BKTools] 資源包重載完成，CN2TW 已自動更新")
                         .color(ChatFormatting.GREEN).send(),
-                mc // 以 Minecraft 作為 Executor，確保回調在主執行緒
-        );
+                mc);
     }
 
     // ══════════════════════════════════════════════════════
@@ -309,8 +340,10 @@ public class Cn2TwFallbackManager {
     // ══════════════════════════════════════════════════════
 
     /**
-     * 非同步刷新 fallbackMap（不輸出檔案）
-     * ForkJoinPool 背景執行緒 prepare → mc.execute 主執行緒 apply
+     * 非同步刷新（GUI 按鈕和 onToggle 使用）
+     *
+     * @param resourceManager 呼叫點快照的 ResourceManager（不在背景執行緒中取得）
+     * @param silent          是否靜默（不顯示聊天訊息）
      */
     private void refreshAsync(ResourceManager resourceManager, boolean silent) {
         if (!refreshPending.compareAndSet(false, true)) {
@@ -323,15 +356,16 @@ public class Cn2TwFallbackManager {
 
         Minecraft mc = Minecraft.getInstance();
 
+        // resourceManager 已在呼叫點快照，背景執行緒直接使用，不再呼叫 mc.getResourceManager()
         CompletableFuture.supplyAsync(() -> prepare(resourceManager))
-                .thenAcceptAsync(preparedData -> mc.execute(() -> {
+                .thenAcceptAsync(data -> mc.execute(() -> {
                     try {
-                        apply(preparedData);
+                        apply(data);
                         if (!silent) {
                             int count = fallbackMap.size();
                             if (count > 0) {
-                                SendChatMessage.of(
-                                        String.format("[BKTools] CN2TW 已刷新，補充了 %d 條翻譯", count))
+                                SendChatMessage.of(String.format(
+                                        "[BKTools] CN2TW 已刷新，補充了 %d 條翻譯", count))
                                         .color(ChatFormatting.GREEN).send();
                             } else {
                                 SendChatMessage.of("[BKTools] CN2TW 已刷新，目前沒有需要補充的翻譯")
@@ -354,8 +388,10 @@ public class Cn2TwFallbackManager {
     }
 
     /**
-     * 讀取指定語言代碼的所有翻譯（掃描全部已載入的 resource pack）
-     * 在背景執行緒呼叫，後載入的 resource pack 不覆蓋先載入的（與 Minecraft 一致）
+     * 讀取指定語言的所有翻譯，掃描所有已載入的 resource pack
+     * 後載入的不覆蓋先載入的（與 Minecraft 行為一致）
+     *
+     * 注意：此方法可能在背景執行緒呼叫，resourceManager 必須是穩定快照 * 公開方法：未來供其他語言對模組複用
      *
      * 公開方法：未來供其他語言對模組複用
      *
@@ -380,7 +416,6 @@ public class Cn2TwFallbackManager {
 
                 for (Map.Entry<String, JsonElement> kv : json.getAsJsonObject().entrySet()) {
                     if (kv.getValue().isJsonPrimitive()) {
-                        // putIfAbsent：優先度高的 resource pack 先載入，後者不覆蓋
                         result.putIfAbsent(kv.getKey(), kv.getValue().getAsString());
                     }
                 }
@@ -405,14 +440,10 @@ public class Cn2TwFallbackManager {
         try {
             Files.createDirectories(OUTPUT_DIR);
 
-            // 按 namespace 分組
-            // key 格式：「namespace:path」或「modid.category.name」
-            // 優先用冒號分割，沒有冒號則用第一段點號作為 namespace
             Map<String, Map<String, String>> grouped = new TreeMap<>();
             for (Map.Entry<String, String> entry : dataToWrite.entrySet()) {
                 String key = entry.getKey();
                 String namespace;
-
                 if (key.contains(":")) {
                     namespace = key.substring(0, key.indexOf(':'));
                 } else if (key.contains(".")) {
@@ -420,12 +451,10 @@ public class Cn2TwFallbackManager {
                 } else {
                     namespace = "_other";
                 }
-
                 grouped.computeIfAbsent(namespace, k -> new TreeMap<>())
                         .put(key, entry.getValue());
             }
 
-            // 組裝輸出 JSON，每個 namespace 是一個區塊
             JsonObject root = new JsonObject();
             for (Map.Entry<String, Map<String, String>> group : grouped.entrySet()) {
                 JsonObject section = new JsonObject();
@@ -442,9 +471,7 @@ public class Cn2TwFallbackManager {
             }
 
             int count = dataToWrite.size();
-            mc.execute(() ->
-            // 輸出到聊天欄，帶可點擊的資料夾連結
-            SendChatMessage.of(String.format("[BKTools] 已輸出 %d 條 fallback 翻譯：", count))
+            mc.execute(() -> SendChatMessage.of(String.format("[BKTools] 已輸出 %d 條 fallback 翻譯：", count))
                     .withFolderLink(OUTPUT_DIR, OUTPUT_FILE.getFileName().toString())
                     .color(ChatFormatting.GRAY).send());
 
