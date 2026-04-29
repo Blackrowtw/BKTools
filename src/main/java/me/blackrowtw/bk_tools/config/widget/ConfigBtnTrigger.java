@@ -37,6 +37,8 @@ import fi.dy.masa.malilib.config.options.ConfigBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 
+import me.blackrowtw.bk_tools.util.HotkeyMessage;
+
 /**
  * 通用觸發按鈕 Config 類型
  * 在 MaliLib Config GUI 中顯示為按鈕，點擊時觸發 Runnable 回調
@@ -193,9 +195,8 @@ public class ConfigBtnTrigger extends ConfigBase<ConfigBtnTrigger>
     @Override
     public void setOptionListValue(IConfigOptionListEntry value) {
         if (this.getCurrentState() == BtnTriggerState.COOLDOWN) {
-            int remaining = this.getRemainingCooldownTicks();
-            String tickText = "§7§o(" + remaining + " tick)§r";
-            InfoUtils.printActionbarMessage("bk_tools.message.actionBarMessage.cooldown_wait", tickText);
+            int remainingTicks = this.getRemainingCooldownTicks();
+            HotkeyMessage.printCooldownWait(remainingTicks);
             return;
         }
         this.lastTriggerTime = System.currentTimeMillis();

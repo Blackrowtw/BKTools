@@ -41,6 +41,9 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.JsonUtils;
 
+import me.blackrowtw.bk_tools.util.CommandSender;
+import me.blackrowtw.bk_tools.util.HotkeyMessage;
+
 /**
  * 命令綁定複合型 Config
  * 將命令文字 (ConfigString) 和快捷鍵 (ConfigHotkey) 包裝為單一 Config 物件
@@ -70,10 +73,11 @@ public class ConfigCommandBind extends ConfigBase<ConfigCommandBind> implements 
         this.command = new ConfigString("command_" + index, defaultCommand);
         this.hotkey = new ConfigHotkey("hotkey_" + index, defaultHotkey, KeybindSettings.PRESS_ALLOWEXTRA);
 
-        // 設定快捷鍵回調：按下快捷鍵時執行命令
+// 設定快捷鍵回調：按下快捷鍵時執行命令
         this.hotkey.getKeybind().setCallback((action, key) -> {
             if (action == KeyAction.PRESS) {
-                this.execute();
+                String cmd = this.executeAndGetCommand();
+                HotkeyMessage.printExecuteCommand("CMB", this.index, cmd);
             }
             return true;
         });
@@ -81,11 +85,20 @@ public class ConfigCommandBind extends ConfigBase<ConfigCommandBind> implements 
         this.updateLastValues();
     }
 
-    /**
+/**
      * 執行綁定的命令
      */
     public void execute() {
         me.blackrowtw.bk_tools.util.CommandSender.send(this.command.getStringValue());
+    }
+    
+    /**
+     * 執行綁定的命令並返回命令字串（用於消息顯示）
+     */
+    public String executeAndGetCommand() {
+        String cmd = this.command.getStringValue();
+        CommandSender.send(cmd);
+        return cmd;
     }
 
     /**

@@ -5,7 +5,10 @@
   "bk_tools.gui.tab.commandBind": "CMB",
   "bk_tools.gui.tab.test": "測試",
 
-  "bk_tools.message.actionBarMessage.cooldown_wait": "§c請勿重複觸發，稍後再試。 %s",
+  "bk_tools.actionBarMessage.hotkey_press.open_gui": "§7已開啟 BKTools 設定介面",
+  "bk_tools.actionBarMessage.execute_command": "§7已執行 %s",
+  "bk_tools.actionBarMessage.command_bind_list_mode_switch": "§7已切換 %s",
+  "bk_tools.actionBarMessage.cooldown_wait": "§c請勿重複觸發，稍後再試。%s",
 
   "bk_tools.config.generic.name.openGuiConfigs": "開啟設定介面",
   "bk_tools.config.generic.comment.openGuiConfigs": "開啟 BKTools 設定頁面的快捷鍵",

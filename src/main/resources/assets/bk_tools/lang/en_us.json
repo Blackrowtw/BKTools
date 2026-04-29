@@ -5,7 +5,10 @@
   "bk_tools.gui.tab.commandBind": "CMB",
   "bk_tools.gui.tab.test": "TEST",
 
-  "bk_tools.message.actionBarMessage.cooldown_wait": "§cPlease wait, do not trigger repeatedly. %s",
+  "bk_tools.actionBarMessage.hotkey_press.open_gui": "§7Opened BKTools GUI",
+  "bk_tools.actionBarMessage.execute_command": "§7Executed %s",
+  "bk_tools.actionBarMessage.command_bind_list_mode_switch": "§7Switched %s",
+  "bk_tools.actionBarMessage.cooldown_wait": "§cPlease wait, do not trigger repeatedly. %s",
 
   "bk_tools.config.generic.name.openGuiConfigs": "Open Config GUI",
   "bk_tools.config.generic.comment.openGuiConfigs": "Hotkey to open the BKTools config screen",

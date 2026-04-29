@@ -38,6 +38,8 @@ import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 
+import me.blackrowtw.bk_tools.util.HotkeyMessage;
+
 /**
  * 命令清單循環模式切換 Config
  * 包含循環模式選擇和模式切換快捷鍵
@@ -70,7 +72,9 @@ public class ConfigCommandBindListMode extends ConfigBase<ConfigCommandBindListM
         // 設定模式切換快捷鍵回調：按下後循環切換模式
         this.modeHotkey.getKeybind().setCallback((action, key) -> {
             if (action == KeyAction.PRESS) {
-                this.cycleMode();
+                ButtonLoopMode newMode = this.cycleMode();
+                int listIndex = this.getListIndex();
+                HotkeyMessage.printCMBLModeSwitch(listIndex, newMode);
             }
             return true;
         });
@@ -78,11 +82,28 @@ public class ConfigCommandBindListMode extends ConfigBase<ConfigCommandBindListM
 
     /**
      * 循環切換模式：Sequential → Random → Fixed → Sequential...
+     * 返回切換後的新模式
      */
-    private void cycleMode() {
+    private ButtonLoopMode cycleMode() {
         ButtonLoopMode current = (ButtonLoopMode) this.loopMode.getOptionListValue();
         ButtonLoopMode next = (ButtonLoopMode) current.cycle(true);
         this.loopMode.setOptionListValue(next);
+        return next;
+    }
+    
+    /**
+     * 取得列表編號（從 config name 解析，如 "list_1_mode" -> 1）
+     */
+    private int getListIndex() {
+        String name = this.getName();
+        if (name.startsWith("list_") && name.endsWith("_mode")) {
+            try {
+                return Integer.parseInt(name.substring(5, name.length() - 5));
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     /**

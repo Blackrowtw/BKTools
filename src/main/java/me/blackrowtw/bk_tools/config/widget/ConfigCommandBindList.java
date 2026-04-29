@@ -43,6 +43,9 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.JsonUtils;
 
+import me.blackrowtw.bk_tools.util.CommandSender;
+import me.blackrowtw.bk_tools.util.HotkeyMessage;
+
 /**
  * 命令清單綁定複合型 Config（Row 1）
  * 將命令清單 (ConfigStringList) 和執行快捷鍵 (ConfigHotkey) 包裝為單一 Config 物件
@@ -80,7 +83,9 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
         // 設定快捷鍵回調：按下快捷鍵時執行下一條命令
         this.hotkey.getKeybind().setCallback((action, key) -> {
             if (action == KeyAction.PRESS) {
-                this.execute();
+                String cmd = this.executeAndGetCommand();
+                int listIndex = this.getListIndex();
+                HotkeyMessage.printExecuteCommand("CMBL", listIndex, cmd);
             }
             return true;
         });
@@ -105,9 +110,16 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
      * 根據 sibling modeConfig 的 loopMode 決定執行行為
      */
     public void execute() {
+        String cmd = executeAndGetCommand();
+    }
+    
+    /**
+     * 執行下一條命令並返回執行的命令字串（用於消息顯示）
+     */
+    public String executeAndGetCommand() {
         List<String> list = this.commands.getStrings();
         if (list.isEmpty())
-            return;
+            return "";
 
         // 邊界保護：currentIndex 超出範圍時重置
         if (this.currentIndex >= list.size()) {
@@ -133,7 +145,23 @@ public class ConfigCommandBindList extends ConfigBase<ConfigCommandBindList> imp
                 break;
         }
 
-        me.blackrowtw.bk_tools.util.CommandSender.send(cmd);
+        CommandSender.send(cmd);
+        return cmd;
+    }
+    
+    /**
+     * 取得列表編號（從 config name 解析，如 "list_1" -> 1）
+     */
+    public int getListIndex() {
+        String name = this.getName();
+        if (name.startsWith("list_")) {
+            try {
+                return Integer.parseInt(name.substring(5));
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     /**

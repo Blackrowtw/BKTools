@@ -37,6 +37,7 @@ import net.minecraft.client.Minecraft;
 
 import me.blackrowtw.bk_tools.tools.cn2tw.Cn2TwFallbackManager;
 import me.blackrowtw.bk_tools.util.DebugLogger;
+import me.blackrowtw.bk_tools.util.HotkeyMessage;
 
 public class KeyCallbackRegistry {
 
@@ -60,6 +61,7 @@ public class KeyCallbackRegistry {
         public boolean onKeyAction(KeyAction action, IKeybind key) {
             if (action == KeyAction.PRESS) {
                 GuiBase.openGui(new GuiConfigs());
+                HotkeyMessage.printHotkeyPress("open_gui");
             }
             return true;
         }
